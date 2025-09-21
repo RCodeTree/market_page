@@ -664,6 +664,35 @@ onMounted(() => {
   display: block;
 }
 
+/* PC端大屏幕优化 */
+@media (min-width: 1400px) {
+  .container {
+    max-width: 1400px;
+  }
+  
+  .cart-item {
+    padding: var(--spacing-lg);
+    gap: var(--spacing-lg);
+  }
+  
+  .recommend-list {
+    grid-template-columns: repeat(5, 1fr);
+    gap: var(--spacing-lg);
+  }
+}
+
+/* 平板端优化 */
+@media (max-width: 992px) {
+  .cart-item {
+    grid-template-columns: auto 100px 1fr auto auto auto;
+    gap: var(--spacing-md);
+  }
+  
+  .recommend-list {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
 /* 响应式设计 */
 @media (max-width: 768px) {
   .cart-item {

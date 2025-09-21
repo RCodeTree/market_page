@@ -230,9 +230,23 @@ ul, ol {
 .transition-slow { transition: all var(--transition-slow); }
 
 /* 响应式工具类 */
-@media (max-width: 768px) {
+@media (max-width: 992px) {
   .container {
     padding: 0 var(--spacing-md);
+  }
+  
+  .hidden-tablet {
+    display: none;
+  }
+  
+  .grid-4 {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 0 var(--spacing-sm);
   }
   
   .grid-4 {
@@ -246,9 +260,27 @@ ul, ol {
   .hidden-mobile {
     display: none;
   }
+  
+  /* 移动端字体大小调整 */
+  .text-responsive {
+    font-size: var(--font-size-sm);
+  }
+  
+  /* 移动端间距调整 */
+  .p-responsive {
+    padding: var(--spacing-sm);
+  }
+  
+  .m-responsive {
+    margin: var(--spacing-sm);
+  }
 }
 
 @media (max-width: 480px) {
+  .container {
+    padding: 0 var(--spacing-xs);
+  }
+  
   .grid-4,
   .grid-3,
   .grid-2 {
@@ -257,6 +289,21 @@ ul, ol {
   
   .text-xs-mobile { font-size: var(--font-size-xs); }
   .text-sm-mobile { font-size: var(--font-size-sm); }
+  
+  /* 小屏幕优化 */
+  .p-responsive {
+    padding: var(--spacing-xs);
+  }
+  
+  .m-responsive {
+    margin: var(--spacing-xs);
+  }
+  
+  /* 触摸友好的按钮大小 */
+  .btn-touch {
+    min-height: 44px;
+    min-width: 44px;
+  }
 }
 
 /* 滚动条样式 */

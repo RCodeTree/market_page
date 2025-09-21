@@ -283,6 +283,22 @@ onMounted(() => {
   gap: var(--spacing-lg);
 }
 
+/* PC端大屏幕优化 */
+@media (min-width: 1400px) {
+  .header-content {
+    gap: var(--spacing-xl);
+    padding: var(--spacing-lg) 0;
+  }
+  
+  .header-search {
+    max-width: 700px;
+  }
+  
+  .header-actions {
+    gap: var(--spacing-xl);
+  }
+}
+
 .header-logo {
   flex-shrink: 0;
 }
@@ -434,14 +450,34 @@ onMounted(() => {
 }
 
 /* 响应式设计 */
+@media (max-width: 992px) {
+  .header-toolbar {
+    padding: var(--spacing-xs) 0;
+  }
+  
+  .toolbar-right {
+    display: none; /* 在平板端隐藏部分工具栏项目 */
+  }
+}
+
 @media (max-width: 768px) {
   .header-toolbar {
     display: none;
   }
   
+  .header-main {
+    padding: var(--spacing-sm) 0;
+  }
+  
   .header-content {
     flex-direction: column;
-    gap: var(--spacing-md);
+    gap: var(--spacing-sm);
+    align-items: stretch;
+  }
+  
+  .header-logo {
+    order: 1;
+    text-align: center;
   }
   
   .header-search {
@@ -452,21 +488,43 @@ onMounted(() => {
   .header-actions {
     order: 3;
     justify-content: center;
-    width: 100%;
+    gap: var(--spacing-xl);
   }
   
   .header-nav {
     flex-direction: column;
-    gap: var(--spacing-md);
+    gap: var(--spacing-sm);
+    margin-top: var(--spacing-sm);
+    padding-top: var(--spacing-sm);
+  }
+  
+  .nav-categories {
+    order: 1;
+    align-self: center;
   }
   
   .nav-links {
+    order: 2;
     justify-content: center;
-    width: 100%;
+    flex-wrap: wrap;
+    gap: var(--spacing-md);
+  }
+  
+  .categories-trigger {
+    padding: var(--spacing-xs) var(--spacing-sm);
+    font-size: var(--font-size-sm);
   }
 }
 
 @media (max-width: 480px) {
+  .header-main {
+    padding: var(--spacing-xs) 0;
+  }
+  
+  .header-content {
+    gap: var(--spacing-xs);
+  }
+  
   .logo-text {
     display: none;
   }
@@ -477,6 +535,19 @@ onMounted(() => {
   
   .action-text {
     display: none;
+  }
+  
+  .header-actions {
+    gap: var(--spacing-lg);
+  }
+  
+  .nav-links {
+    gap: var(--spacing-sm);
+  }
+  
+  .nav-link {
+    font-size: var(--font-size-sm);
+    padding: var(--spacing-xs) var(--spacing-sm);
   }
 }
 </style>

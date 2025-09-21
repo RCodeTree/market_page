@@ -87,18 +87,55 @@ onMounted(() => {
 <style scoped>
 .home-page {
   min-height: 100vh;
+  background-color: var(--bg-secondary);
 }
 
-.banner-section {
-  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-  padding: var(--spacing-lg) 0;
-}
-
-.banner-content {
+.main-content {
   display: grid;
-  grid-template-columns: 200px 1fr 200px;
-  gap: var(--spacing-lg);
-  height: 400px;
+  grid-template-columns: 200px 1fr 300px;
+  gap: var(--spacing-md);
+  max-width: var(--container-max-width);
+  margin: 0 auto;
+  padding: var(--spacing-md);
+  min-height: 400px;
+}
+
+/* PC端大屏幕优化 */
+@media (min-width: 1400px) {
+  .main-content {
+    max-width: 1400px;
+    grid-template-columns: 220px 1fr 320px;
+    gap: var(--spacing-lg);
+    padding: var(--spacing-lg);
+  }
+}
+
+.left-sidebar {
+  background-color: var(--bg-primary);
+  border-radius: var(--radius-base);
+  overflow: hidden;
+}
+
+.center-banner {
+  background-color: var(--bg-primary);
+  border-radius: var(--radius-base);
+  overflow: hidden;
+}
+
+.right-sidebar {
+  background-color: var(--bg-primary);
+  border-radius: var(--radius-base);
+  overflow: hidden;
+}
+
+.quick-section,
+.recommend-section,
+.categories-section,
+.new-products-section,
+.brands-section {
+  max-width: var(--container-max-width);
+  margin: 0 auto;
+  padding: var(--spacing-xl) var(--spacing-md);
 }
 
 .category-nav {
@@ -150,63 +187,74 @@ onMounted(() => {
 
 /* 响应式设计 */
 @media (max-width: 1200px) {
-  .banner-content {
-    grid-template-columns: 180px 1fr 180px;
+  .main-content {
+    grid-template-columns: 180px 1fr 250px;
+    gap: var(--spacing-sm);
   }
 }
 
 @media (max-width: 992px) {
-  .banner-content {
+  .main-content {
     grid-template-columns: 1fr;
-    height: auto;
     gap: var(--spacing-md);
+    padding: var(--spacing-sm);
   }
   
-  .category-nav {
+  .left-sidebar {
     order: 2;
+    display: none; /* 在平板端隐藏左侧导航 */
   }
   
-  .main-banner {
+  .center-banner {
     order: 1;
     height: 300px;
   }
   
-  .side-promotion {
+  .right-sidebar {
     order: 3;
-    flex-direction: row;
-    justify-content: space-between;
+    height: auto;
   }
 }
 
 @media (max-width: 768px) {
-  .banner-section {
-    padding: var(--spacing-md) 0;
+  .main-content {
+    padding: var(--spacing-xs);
+    gap: var(--spacing-sm);
   }
   
-  .main-banner {
+  .center-banner {
     height: 250px;
   }
   
-  .side-promotion {
-    flex-direction: column;
+  .right-sidebar {
+    display: none; /* 在移动端隐藏右侧推广 */
   }
   
-  .quick-entry-section,
+  .quick-section,
   .recommend-section,
-  .hot-category-section,
+  .categories-section,
   .new-products-section,
-  .brand-section {
-    padding: var(--spacing-xl) 0;
+  .brands-section {
+    padding: var(--spacing-lg) var(--spacing-sm);
   }
 }
 
 @media (max-width: 480px) {
-  .banner-content {
-    gap: var(--spacing-sm);
+  .main-content {
+    padding: var(--spacing-xs);
+    gap: var(--spacing-xs);
   }
   
-  .main-banner {
+  .center-banner {
     height: 200px;
+  }
+  
+  .quick-section,
+  .recommend-section,
+  .categories-section,
+  .new-products-section,
+  .brands-section {
+    padding: var(--spacing-md) var(--spacing-xs);
   }
 }
 </style>
