@@ -89,26 +89,6 @@
           />
         </el-form-item>
 
-        <el-form-item prop="email">
-          <el-input
-            v-model="registerForm.email"
-            placeholder="请输入邮箱"
-            size="large"
-            :prefix-icon="Message"
-            clearable
-          />
-        </el-form-item>
-
-        <el-form-item prop="phone">
-          <el-input
-            v-model="registerForm.phone"
-            placeholder="请输入手机号"
-            size="large"
-            :prefix-icon="Phone"
-            clearable
-          />
-        </el-form-item>
-
         <el-form-item prop="password">
           <el-input
             v-model="registerForm.password"
@@ -165,7 +145,7 @@
 <script setup>
 import { ref, reactive, watch } from 'vue'
 import { ElMessage } from 'element-plus'
-import { User, Lock, Message, Phone } from '@element-plus/icons-vue'
+import { User, Lock } from '@element-plus/icons-vue'
 import { useUserStore } from '@/store/modules/user'
 import { useRouter } from 'vue-router'
 
@@ -187,8 +167,6 @@ const loginForm = reactive({
 // 注册表单
 const registerForm = reactive({
   username: '',
-  email: '',
-  phone: '',
   password: '',
   confirmPassword: '',
   agree: false
@@ -213,18 +191,9 @@ const registerRules = {
     { min: 3, max: 20, message: '用户名长度在 3 到 20 个字符', trigger: 'blur' },
     { pattern: /^[a-zA-Z0-9_]+$/, message: '用户名只能包含字母、数字和下划线', trigger: 'blur' }
   ],
-  email: [
-    { required: true, message: '请输入邮箱', trigger: 'blur' },
-    { type: 'email', message: '请输入正确的邮箱格式', trigger: 'blur' }
-  ],
-  phone: [
-    { required: true, message: '请输入手机号', trigger: 'blur' },
-    { pattern: /^1[3-9]\d{9}$/, message: '请输入正确的手机号格式', trigger: 'blur' }
-  ],
   password: [
     { required: true, message: '请输入密码', trigger: 'blur' },
-    { min: 6, max: 20, message: '密码长度在 6 到 20 个字符', trigger: 'blur' },
-    { pattern: /^(?=.*[a-zA-Z])(?=.*\d)/, message: '密码必须包含字母和数字', trigger: 'blur' }
+    { min: 6, max: 20, message: '密码长度在 6 到 20 个字符', trigger: 'blur' }
   ],
   confirmPassword: [
     { required: true, message: '请确认密码', trigger: 'blur' },
@@ -256,8 +225,6 @@ const resetForms = () => {
   })
   Object.assign(registerForm, {
     username: '',
-    email: '',
-    phone: '',
     password: '',
     confirmPassword: '',
     agree: false
@@ -309,8 +276,6 @@ const handleRegister = async () => {
     
     const success = await userStore.register({
       username: registerForm.username,
-      email: registerForm.email,
-      phone: registerForm.phone,
       password: registerForm.password
     })
 
