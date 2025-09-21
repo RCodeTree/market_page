@@ -1,22 +1,9 @@
 <template>
   <div class="home-banner">
-    <el-carousel
-      :interval="5000"
-      :arrow="arrow"
-      indicator-position="inside"
-      height="400px"
-      class="banner-carousel"
-    >
-      <el-carousel-item
-        v-for="banner in banners"
-        :key="banner.id"
-        class="banner-item"
-      >
-        <div 
-          class="banner-content"
-          :style="{ backgroundImage: `url(${banner.image})` }"
-          @click="handleBannerClick(banner)"
-        >
+    <el-carousel :interval="5000" :arrow="arrow" indicator-position="inside" height="400px" class="banner-carousel">
+      <el-carousel-item v-for="banner in banners" :key="banner.id" class="banner-item">
+        <div class="banner-content" :style="{ backgroundImage: `url(${banner.image})` }"
+          @click="handleBannerClick(banner)">
           <div class="banner-overlay">
             <div class="banner-info">
               <h3 class="banner-title">{{ banner.title }}</h3>
@@ -26,13 +13,8 @@
                 <span class="price-value">¥{{ banner.price }}</span>
                 <span class="price-original" v-if="banner.originalPrice">¥{{ banner.originalPrice }}</span>
               </div>
-              <el-button
-                v-if="banner.buttonText"
-                type="primary"
-                size="large"
-                class="banner-button"
-                @click.stop="handleButtonClick(banner)"
-              >
+              <el-button v-if="banner.buttonText" type="primary" size="large" class="banner-button"
+                @click.stop="handleButtonClick(banner)">
                 {{ banner.buttonText }}
               </el-button>
             </div>
@@ -40,19 +22,6 @@
         </div>
       </el-carousel-item>
     </el-carousel>
-    
-    <!-- 轮播图指示器 -->
-    <div class="banner-indicators">
-      <div
-        v-for="(banner, index) in banners"
-        :key="banner.id"
-        class="indicator-item"
-        :class="{ active: currentIndex === index }"
-        @click="goToSlide(index)"
-      >
-        <span class="indicator-text">{{ banner.shortTitle }}</span>
-      </div>
-    </div>
   </div>
 </template>
 
@@ -61,7 +30,6 @@ import { ref, reactive, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 
 const router = useRouter()
-const currentIndex = ref(0)
 const arrow = ref('hover')
 
 // 轮播图数据
@@ -145,16 +113,7 @@ const handleButtonClick = (banner) => {
   }
 }
 
-// 跳转到指定幻灯片
-const goToSlide = (index) => {
-  currentIndex.value = index
-  // 这里可以通过 ref 控制 carousel 组件跳转
-}
 
-// 监听轮播图变化
-const handleSlideChange = (index) => {
-  currentIndex.value = index
-}
 
 onMounted(() => {
   // 可以在这里加载轮播图数据
@@ -201,6 +160,8 @@ onMounted(() => {
 .banner-carousel :deep(.el-carousel__indicator) {
   width: 12px;
   height: 12px;
+  margin: 0 6px;
+  /* 增加圆点指示器之间的间距 */
 }
 
 .banner-carousel :deep(.el-carousel__button) {
@@ -236,12 +197,10 @@ onMounted(() => {
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(
-    45deg,
-    rgba(0, 0, 0, 0.6) 0%,
-    rgba(0, 0, 0, 0.3) 50%,
-    rgba(0, 0, 0, 0.1) 100%
-  );
+  background: linear-gradient(45deg,
+      rgba(0, 0, 0, 0.6) 0%,
+      rgba(0, 0, 0, 0.3) 50%,
+      rgba(0, 0, 0, 0.1) 100%);
   display: flex;
   align-items: center;
   padding: var(--spacing-xxl);
@@ -309,69 +268,34 @@ onMounted(() => {
   box-shadow: var(--shadow-lg);
 }
 
-.banner-indicators {
-  position: absolute;
-  right: var(--spacing-lg);
-  top: 50%;
-  transform: translateY(-50%);
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-sm);
-  z-index: 10;
-}
 
-.indicator-item {
-  background-color: rgba(255, 255, 255, 0.8);
-  padding: var(--spacing-sm) var(--spacing-md);
-  border-radius: var(--radius-base);
-  cursor: pointer;
-  transition: all var(--transition-fast);
-  backdrop-filter: blur(10px);
-}
-
-.indicator-item:hover,
-.indicator-item.active {
-  background-color: var(--primary-color);
-  color: var(--text-white);
-  transform: translateX(-5px);
-}
-
-.indicator-text {
-  font-size: var(--font-size-xs);
-  font-weight: var(--font-weight-medium);
-  white-space: nowrap;
-}
 
 /* 响应式设计 */
 @media (max-width: 768px) {
   .home-banner {
     height: 300px;
   }
-  
+
   .banner-carousel {
     height: 300px;
   }
-  
+
   .banner-overlay {
     padding: var(--spacing-lg);
   }
-  
+
   .banner-title {
     font-size: var(--font-size-xxl);
   }
-  
+
   .banner-subtitle {
     font-size: var(--font-size-base);
   }
-  
+
   .price-value {
     font-size: var(--font-size-xl);
   }
-  
-  .banner-indicators {
-    display: none;
-  }
-  
+
   .arrow {
     display: none;
   }
@@ -381,23 +305,23 @@ onMounted(() => {
   .home-banner {
     height: 250px;
   }
-  
+
   .banner-carousel {
     height: 250px;
   }
-  
+
   .banner-overlay {
     padding: var(--spacing-md);
   }
-  
+
   .banner-title {
     font-size: var(--font-size-xl);
   }
-  
+
   .banner-subtitle {
     font-size: var(--font-size-sm);
   }
-  
+
   .banner-button {
     padding: var(--spacing-sm) var(--spacing-lg);
     font-size: var(--font-size-sm);

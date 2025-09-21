@@ -14,9 +14,6 @@
         @mouseleave="hideSubMenu"
       >
         <div class="item-content">
-          <el-icon class="item-icon">
-            <component :is="category.icon" />
-          </el-icon>
           <span class="item-text">{{ category.name }}</span>
           <el-icon class="arrow-icon"><ArrowRight /></el-icon>
         </div>
@@ -59,189 +56,87 @@
 import { ref, reactive } from 'vue'
 import { 
   Grid, 
-  ArrowRight,
-  Cellphone,
-  Monitor,
-  Camera,
-  VideoPlay,
-  ShoppingBag,
-  Coffee,
-  Basketball,
-  Reading,
-  Female,
-  Male
+  ArrowRight
 } from '@element-plus/icons-vue'
 
 const activeCategory = ref(null)
 let hideTimer = null
 
 // 商品分类数据
-const categories = reactive([
+const categories = [
   {
     id: 1,
     name: '手机数码',
-    icon: 'Cellphone',
     children: [
-      {
-        id: 11,
-        name: '手机通讯',
-        items: [
-          { id: 111, name: '手机' },
-          { id: 112, name: '对讲机' },
-          { id: 113, name: '手机配件' }
-        ]
-      },
-      {
-        id: 12,
-        name: '数码产品',
-        items: [
-          { id: 121, name: '平板电脑' },
-          { id: 122, name: '智能手表' },
-          { id: 123, name: '耳机音响' }
-        ]
-      }
+      { id: 11, name: '手机通讯' },
+      { id: 12, name: '数码配件' },
+      { id: 13, name: '智能设备' }
     ]
   },
   {
     id: 2,
     name: '电脑办公',
-    icon: 'Monitor',
     children: [
-      {
-        id: 21,
-        name: '电脑整机',
-        items: [
-          { id: 211, name: '笔记本' },
-          { id: 212, name: '台式机' },
-          { id: 213, name: '一体机' }
-        ]
-      },
-      {
-        id: 22,
-        name: '电脑配件',
-        items: [
-          { id: 221, name: '显示器' },
-          { id: 222, name: '键盘鼠标' },
-          { id: 223, name: '硬盘存储' }
-        ]
-      }
+      { id: 21, name: '电脑整机' },
+      { id: 22, name: '电脑配件' },
+      { id: 23, name: '办公设备' }
     ]
   },
   {
     id: 3,
     name: '摄影摄像',
-    icon: 'Camera',
     children: [
-      {
-        id: 31,
-        name: '数码相机',
-        items: [
-          { id: 311, name: '单反相机' },
-          { id: 312, name: '微单相机' },
-          { id: 313, name: '拍立得' }
-        ]
-      },
-      {
-        id: 32,
-        name: '摄像设备',
-        items: [
-          { id: 321, name: '摄像机' },
-          { id: 322, name: '运动相机' },
-          { id: 323, name: '无人机' }
-        ]
-      }
+      { id: 31, name: '数码相机' },
+      { id: 32, name: '摄像设备' },
+      { id: 33, name: '影音娱乐' }
     ]
   },
   {
     id: 4,
     name: '影音娱乐',
-    icon: 'VideoPlay',
     children: [
-      {
-        id: 41,
-        name: '耳机音响',
-        items: [
-          { id: 411, name: '耳机' },
-          { id: 412, name: '音响' },
-          { id: 413, name: '麦克风' }
-        ]
-      }
+      { id: 41, name: '耳机音响' },
+      { id: 42, name: '音乐器材' },
+      { id: 43, name: '麦克风' }
     ]
   },
   {
     id: 5,
     name: '服装服饰',
-    icon: 'ShoppingBag',
     children: [
-      {
-        id: 51,
-        name: '男装',
-        items: [
-          { id: 511, name: 'T恤' },
-          { id: 512, name: '衬衫' },
-          { id: 513, name: '裤装' }
-        ]
-      },
-      {
-        id: 52,
-        name: '女装',
-        items: [
-          { id: 521, name: '连衣裙' },
-          { id: 522, name: '上衣' },
-          { id: 523, name: '下装' }
-        ]
-      }
+      { id: 51, name: '男装' },
+      { id: 52, name: '女装' },
+      { id: 53, name: '内衣配饰' }
     ]
   },
   {
     id: 6,
     name: '食品饮料',
-    icon: 'Coffee',
     children: [
-      {
-        id: 61,
-        name: '休闲食品',
-        items: [
-          { id: 611, name: '坚果' },
-          { id: 612, name: '饼干' },
-          { id: 613, name: '糖果' }
-        ]
-      }
+      { id: 61, name: '休闲食品' },
+      { id: 62, name: '茶叶酒水' },
+      { id: 63, name: '生鲜食品' }
     ]
   },
   {
     id: 7,
     name: '运动户外',
-    icon: 'Basketball',
     children: [
-      {
-        id: 71,
-        name: '运动器材',
-        items: [
-          { id: 711, name: '健身器材' },
-          { id: 712, name: '球类运动' },
-          { id: 713, name: '户外装备' }
-        ]
-      }
+      { id: 71, name: '运动鞋服' },
+      { id: 72, name: '健身器材' },
+      { id: 73, name: '户外装备' }
     ]
   },
   {
     id: 8,
     name: '图书文娱',
-    icon: 'Reading',
     children: [
-      {
-        id: 81,
-        name: '图书',
-        items: [
-          { id: 811, name: '小说' },
-          { id: 812, name: '教育' },
-          { id: 813, name: '科技' }
-        ]
-      }
+      { id: 81, name: '图书音像' },
+      { id: 82, name: '文具用品' },
+      { id: 83, name: '乐器' }
     ]
   }
-])
+]
 
 // 显示子菜单
 const showSubMenu = (category) => {
@@ -270,20 +165,21 @@ const hideSubMenu = () => {
 
 <style scoped>
 .category-nav {
-  background-color: var(--bg-white);
-  border-radius: var(--radius-base);
+  background-color: #ffffff;
+  border-radius: 6px;
   overflow: hidden;
   position: relative;
+  border: 1px solid #f0f0f0;
 }
 
 .nav-header {
   display: flex;
   align-items: center;
-  gap: var(--spacing-sm);
-  padding: var(--spacing-md);
-  background-color: var(--primary-color);
-  color: var(--text-white);
-  font-weight: var(--font-weight-medium);
+  gap: 8px;
+  padding: 16px;
+  background-color: #e23e3e;
+  color: #ffffff;
+  font-weight: 500;
 }
 
 .nav-list {
@@ -293,7 +189,7 @@ const hideSubMenu = () => {
 
 .nav-item {
   position: relative;
-  border-bottom: 1px solid var(--border-light);
+  border-bottom: 1px solid #f0f0f0;
 }
 
 .nav-item:last-child {
@@ -303,30 +199,27 @@ const hideSubMenu = () => {
 .item-content {
   display: flex;
   align-items: center;
-  gap: var(--spacing-sm);
-  padding: var(--spacing-md);
+  gap: 8px;
+  padding: 16px;
   cursor: pointer;
-  transition: all var(--transition-fast);
+  transition: all 0.15s;
 }
 
 .item-content:hover {
-  background-color: var(--bg-light);
-  color: var(--primary-color);
+  background-color: #fafafa;
+  color: #e23e3e;
 }
 
-.item-icon {
-  font-size: var(--font-size-lg);
-  color: var(--primary-color);
-}
+
 
 .item-text {
   flex: 1;
-  font-size: var(--font-size-sm);
+  font-size: 14px;
 }
 
 .arrow-icon {
-  font-size: var(--font-size-sm);
-  color: var(--text-secondary);
+  font-size: 14px;
+  color: #666666;
 }
 
 .sub-menu {
@@ -334,60 +227,60 @@ const hideSubMenu = () => {
   left: 100%;
   top: 0;
   width: 600px;
-  background-color: var(--bg-white);
-  border: 1px solid var(--border-light);
-  border-radius: var(--radius-base);
-  box-shadow: var(--shadow-lg);
-  z-index: var(--z-index-dropdown);
+  background-color: #ffffff;
+  border: 1px solid #f0f0f0;
+  border-radius: 6px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
 }
 
 .sub-menu-content {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: var(--spacing-lg);
-  padding: var(--spacing-lg);
+  gap: 24px;
+  padding: 24px;
   max-height: 400px;
   overflow-y: auto;
 }
 
 .sub-category {
-  margin-bottom: var(--spacing-md);
+  margin-bottom: 16px;
 }
 
 .sub-title {
-  font-size: var(--font-size-base);
-  font-weight: var(--font-weight-medium);
-  color: var(--text-primary);
-  margin: 0 0 var(--spacing-sm) 0;
-  padding-bottom: var(--spacing-xs);
-  border-bottom: 1px solid var(--border-light);
+  font-size: 16px;
+  font-weight: 500;
+  color: #333333;
+  margin: 0 0 8px 0;
+  padding-bottom: 4px;
+  border-bottom: 1px solid #f0f0f0;
 }
 
 .sub-items {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--spacing-sm);
+  gap: 8px;
 }
 
 .sub-item {
   display: inline-block;
-  padding: var(--spacing-xs) var(--spacing-sm);
-  font-size: var(--font-size-sm);
-  color: var(--text-secondary);
+  padding: 4px 8px;
+  font-size: 14px;
+  color: #666666;
   text-decoration: none;
-  border-radius: var(--radius-sm);
-  transition: all var(--transition-fast);
+  border-radius: 4px;
+  transition: all 0.15s;
 }
 
 .sub-item:hover {
-  background-color: var(--bg-light);
-  color: var(--primary-color);
+  background-color: #f5f5f5;
+  color: #e23e3e;
 }
 
 /* 动画效果 */
 .submenu-enter-active,
 .submenu-leave-active {
-  transition: all var(--transition-normal);
+  transition: all 0.3s;
 }
 
 .submenu-enter-from {
@@ -408,12 +301,12 @@ const hideSubMenu = () => {
 
 .nav-list::-webkit-scrollbar-track,
 .sub-menu-content::-webkit-scrollbar-track {
-  background: var(--bg-light);
+  background: #f5f5f5;
 }
 
 .nav-list::-webkit-scrollbar-thumb,
 .sub-menu-content::-webkit-scrollbar-thumb {
-  background: var(--border-base);
+  background: #d9d9d9;
   border-radius: 2px;
 }
 
@@ -430,16 +323,16 @@ const hideSubMenu = () => {
 
 @media (max-width: 768px) {
   .nav-header {
-    padding: var(--spacing-sm) var(--spacing-md);
-    font-size: var(--font-size-sm);
+    padding: 8px 16px;
+    font-size: 14px;
   }
   
   .item-content {
-    padding: var(--spacing-sm) var(--spacing-md);
+    padding: 8px 16px;
   }
   
   .item-text {
-    font-size: var(--font-size-xs);
+    font-size: 12px;
   }
   
   .sub-menu {

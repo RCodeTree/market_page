@@ -87,16 +87,16 @@ onMounted(() => {
 <style scoped>
 .home-page {
   min-height: 100vh;
-  background-color: var(--bg-secondary);
+  background-color: #f5f5f5;
 }
 
 .main-content {
   display: grid;
   grid-template-columns: 200px 1fr 300px;
-  gap: var(--spacing-md);
-  max-width: var(--container-max-width);
+  gap: 16px;
+  max-width: 1200px;
   margin: 0 auto;
-  padding: var(--spacing-md);
+  padding: 16px;
   min-height: 400px;
 }
 
@@ -105,27 +105,33 @@ onMounted(() => {
   .main-content {
     max-width: 1400px;
     grid-template-columns: 220px 1fr 320px;
-    gap: var(--spacing-lg);
-    padding: var(--spacing-lg);
+    gap: 24px;
+    padding: 24px;
   }
 }
 
 .left-sidebar {
-  background-color: var(--bg-primary);
-  border-radius: var(--radius-base);
+  background-color: #ffffff;
+  border-radius: 6px;
   overflow: hidden;
+  border: 1px solid #f0f0f0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .center-banner {
-  background-color: var(--bg-primary);
-  border-radius: var(--radius-base);
+  background-color: #ffffff;
+  border-radius: 6px;
   overflow: hidden;
+  border: 1px solid #f0f0f0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .right-sidebar {
-  background-color: var(--bg-primary);
-  border-radius: var(--radius-base);
+  background-color: #ffffff;
+  border-radius: 6px;
   overflow: hidden;
+  border: 1px solid #f0f0f0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .quick-section,
@@ -133,9 +139,9 @@ onMounted(() => {
 .categories-section,
 .new-products-section,
 .brands-section {
-  max-width: var(--container-max-width);
+  max-width: 1200px;
   margin: 0 auto;
-  padding: var(--spacing-xl) var(--spacing-md);
+  padding: 32px 16px;
 }
 
 .category-nav {
@@ -189,15 +195,15 @@ onMounted(() => {
 @media (max-width: 1200px) {
   .main-content {
     grid-template-columns: 180px 1fr 250px;
-    gap: var(--spacing-sm);
+    gap: 8px;
   }
 }
 
 @media (max-width: 992px) {
   .main-content {
     grid-template-columns: 1fr;
-    gap: var(--spacing-md);
-    padding: var(--spacing-sm);
+    gap: 16px;
+    padding: 8px;
   }
   
   .left-sidebar {

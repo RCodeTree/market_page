@@ -64,22 +64,22 @@ const handleClick = (promotion) => {
 .side-promotion {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-md);
+  gap: 16px;
   height: 100%;
 }
 
 .promotion-item {
   flex: 1;
-  border-radius: var(--radius-base);
+  border-radius: 6px;
   overflow: hidden;
   cursor: pointer;
-  transition: transform var(--transition-fast);
-  box-shadow: var(--shadow-sm);
+  transition: transform 0.15s;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .promotion-item:hover {
   transform: translateY(-2px);
-  box-shadow: var(--shadow-md);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
 .promotion-image {
@@ -109,36 +109,36 @@ const handleClick = (promotion) => {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: var(--spacing-md);
+  padding: 16px;
 }
 
 .promotion-content {
   text-align: center;
-  color: var(--text-white);
+  color: #ffffff;
 }
 
 .promotion-title {
-  font-size: var(--font-size-lg);
-  font-weight: var(--font-weight-bold);
-  margin: 0 0 var(--spacing-sm) 0;
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0 0 8px 0;
   text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
 }
 
 .promotion-desc {
-  font-size: var(--font-size-sm);
-  margin: 0 0 var(--spacing-md) 0;
+  font-size: 14px;
+  margin: 0 0 16px 0;
   opacity: 0.9;
-  line-height: var(--line-height-normal);
+  line-height: 1.5;
 }
 
 .promotion-action {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: var(--spacing-xs);
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-medium);
-  color: var(--warning-color);
+  gap: 4px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #faad14;
 }
 
 .action-text {
