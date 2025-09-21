@@ -1,0 +1,100 @@
+/* 宁北商城 - 全局样式变量 */
+:root {
+  /* 主题色彩 - 参考京东但使用宁北品牌色 */
+  --primary-color: #e23e3e;           /* 主红色 */
+  --primary-hover: #c73333;           /* 主红色悬停 */
+  --primary-light: #f5e6e6;           /* 主红色浅色 */
+  --primary-dark: #b82d2d;            /* 主红色深色 */
+  
+  --secondary-color: #ff6600;         /* 辅助橙色 */
+  --secondary-hover: #e55a00;         /* 辅助橙色悬停 */
+  --secondary-light: #fff2e6;         /* 辅助橙色浅色 */
+  
+  --success-color: #52c41a;           /* 成功绿色 */
+  --warning-color: #faad14;           /* 警告黄色 */
+  --error-color: #ff4d4f;             /* 错误红色 */
+  --info-color: #1890ff;              /* 信息蓝色 */
+  
+  /* 文字颜色 */
+  --text-primary: #333333;            /* 主要文字 */
+  --text-secondary: #666666;          /* 次要文字 */
+  --text-placeholder: #999999;        /* 占位文字 */
+  --text-disabled: #cccccc;           /* 禁用文字 */
+  --text-white: #ffffff;              /* 白色文字 */
+  
+  /* 背景色 */
+  --bg-primary: #ffffff;              /* 主背景 */
+  --bg-secondary: #f5f5f5;            /* 次背景 */
+  --bg-tertiary: #fafafa;             /* 三级背景 */
+  --bg-dark: #333333;                 /* 深色背景 */
+  --bg-overlay: rgba(0, 0, 0, 0.5);   /* 遮罩背景 */
+  
+  /* 边框色 */
+  --border-light: #f0f0f0;            /* 浅边框 */
+  --border-base: #d9d9d9;             /* 基础边框 */
+  --border-dark: #999999;             /* 深边框 */
+  
+  /* 阴影 */
+  --shadow-light: 0 2px 4px rgba(0, 0, 0, 0.1);
+  --shadow-base: 0 4px 8px rgba(0, 0, 0, 0.15);
+  --shadow-dark: 0 8px 16px rgba(0, 0, 0, 0.2);
+  
+  /* 圆角 */
+  --radius-small: 4px;
+  --radius-base: 6px;
+  --radius-large: 8px;
+  --radius-round: 50%;
+  
+  /* 间距 */
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 16px;
+  --spacing-lg: 24px;
+  --spacing-xl: 32px;
+  --spacing-xxl: 48px;
+  
+  /* 字体大小 */
+  --font-size-xs: 12px;
+  --font-size-sm: 14px;
+  --font-size-base: 16px;
+  --font-size-lg: 18px;
+  --font-size-xl: 20px;
+  --font-size-xxl: 24px;
+  --font-size-title: 28px;
+  
+  /* 字体粗细 */
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-bold: 600;
+  
+  /* 行高 */
+  --line-height-tight: 1.2;
+  --line-height-base: 1.5;
+  --line-height-loose: 1.8;
+  
+  /* 布局宽度 */
+  --container-max-width: 1200px;
+  --container-padding: 20px;
+  
+  /* 响应式断点 */
+  --breakpoint-xs: 480px;
+  --breakpoint-sm: 768px;
+  --breakpoint-md: 992px;
+  --breakpoint-lg: 1200px;
+  --breakpoint-xl: 1600px;
+  
+  /* 动画时间 */
+  --transition-fast: 0.15s;
+  --transition-base: 0.3s;
+  --transition-slow: 0.5s;
+  
+  /* z-index层级 */
+  --z-index-dropdown: 1000;
+  --z-index-sticky: 1020;
+  --z-index-fixed: 1030;
+  --z-index-modal-backdrop: 1040;
+  --z-index-modal: 1050;
+  --z-index-popover: 1060;
+  --z-index-tooltip: 1070;
+  --z-index-toast: 1080;
+}

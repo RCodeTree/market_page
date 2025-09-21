@@ -1,0 +1,200 @@
+<template>
+  <div class="side-promotion">
+    <div
+      v-for="promotion in promotions"
+      :key="promotion.id"
+      class="promotion-item"
+      @click="handleClick(promotion)"
+    >
+      <div class="promotion-image">
+        <img :src="promotion.image" :alt="promotion.title" />
+        <div class="promotion-overlay">
+          <div class="promotion-content">
+            <h4 class="promotion-title">{{ promotion.title }}</h4>
+            <p class="promotion-desc">{{ promotion.description }}</p>
+            <div class="promotion-action">
+              <span class="action-text">{{ promotion.actionText }}</span>
+              <el-icon><ArrowRight /></el-icon>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script setup>
+import { reactive } from 'vue'
+import { useRouter } from 'vue-router'
+import { ArrowRight } from '@element-plus/icons-vue'
+
+const router = useRouter()
+
+// 推广数据
+const promotions = reactive([
+  {
+    id: 1,
+    title: '会员专享',
+    description: '开通会员享受更多优惠',
+    actionText: '立即开通',
+    image: 'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=200&h=180&fit=crop',
+    link: '/membership',
+    type: 'membership'
+  },
+  {
+    id: 2,
+    title: '每日签到',
+    description: '签到领积分，兑换好礼',
+    actionText: '去签到',
+    image: 'https://images.unsplash.com/photo-1513475382585-d06e58bcb0e0?w=200&h=180&fit=crop',
+    link: '/checkin',
+    type: 'checkin'
+  }
+])
+
+// 处理点击事件
+const handleClick = (promotion) => {
+  if (promotion.link) {
+    router.push(promotion.link)
+  }
+}
+</script>
+
+<style scoped>
+.side-promotion {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+  height: 100%;
+}
+
+.promotion-item {
+  flex: 1;
+  border-radius: var(--radius-base);
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform var(--transition-fast);
+  box-shadow: var(--shadow-sm);
+}
+
+.promotion-item:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.promotion-image {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: 180px;
+}
+
+.promotion-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.promotion-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(0, 0, 0, 0.7) 0%,
+    rgba(0, 0, 0, 0.3) 100%
+  );
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-md);
+}
+
+.promotion-content {
+  text-align: center;
+  color: var(--text-white);
+}
+
+.promotion-title {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  margin: 0 0 var(--spacing-sm) 0;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.promotion-desc {
+  font-size: var(--font-size-sm);
+  margin: 0 0 var(--spacing-md) 0;
+  opacity: 0.9;
+  line-height: var(--line-height-normal);
+}
+
+.promotion-action {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-xs);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--warning-color);
+}
+
+.action-text {
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+/* 响应式设计 */
+@media (max-width: 992px) {
+  .side-promotion {
+    flex-direction: row;
+    height: auto;
+  }
+  
+  .promotion-item {
+    flex: 1;
+    min-height: 150px;
+  }
+  
+  .promotion-image {
+    min-height: 150px;
+  }
+}
+
+@media (max-width: 768px) {
+  .promotion-item {
+    min-height: 120px;
+  }
+  
+  .promotion-image {
+    min-height: 120px;
+  }
+  
+  .promotion-title {
+    font-size: var(--font-size-base);
+  }
+  
+  .promotion-desc {
+    font-size: var(--font-size-xs);
+  }
+  
+  .promotion-overlay {
+    padding: var(--spacing-sm);
+  }
+}
+
+@media (max-width: 480px) {
+  .side-promotion {
+    flex-direction: column;
+  }
+  
+  .promotion-item {
+    min-height: 100px;
+  }
+  
+  .promotion-image {
+    min-height: 100px;
+  }
+}
+</style>
