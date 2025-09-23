@@ -124,6 +124,14 @@ onMounted(() => {
   overflow: hidden;
   border: 1px solid #f0f0f0;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  height: 400px;
+  display: flex;
+  align-items: stretch;
+}
+
+.center-banner > * {
+  width: 100%;
+  height: 100%;
 }
 
 .right-sidebar {
@@ -214,6 +222,8 @@ onMounted(() => {
   .center-banner {
     order: 1;
     height: 300px;
+    display: flex;
+    align-items: stretch;
   }
   
   .right-sidebar {
@@ -230,6 +240,8 @@ onMounted(() => {
   
   .center-banner {
     height: 250px;
+    display: flex;
+    align-items: stretch;
   }
   
   .right-sidebar {
@@ -253,6 +265,8 @@ onMounted(() => {
   
   .center-banner {
     height: 200px;
+    display: flex;
+    align-items: stretch;
   }
   
   .quick-section,

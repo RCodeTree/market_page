@@ -1,6 +1,6 @@
 <template>
   <div class="home-banner">
-    <el-carousel :interval="5000" :arrow="arrow" indicator-position="inside" height="400px" class="banner-carousel">
+    <el-carousel :interval="5000" :arrow="arrow" indicator-position="inside" height="100%" class="banner-carousel">
       <el-carousel-item v-for="banner in banners" :key="banner.id" class="banner-item">
         <div class="banner-content" :style="{ backgroundImage: `url(${banner.image})` }"
           @click="handleBannerClick(banner)">
@@ -124,20 +124,25 @@ onMounted(() => {
 <style scoped>
 .home-banner {
   position: relative;
-  height: 400px;
-  border-radius: var(--radius-base);
+  width: 100%;
+  height: 100%;
+  min-height: 400px;
   overflow: hidden;
 }
 
 .banner-carousel {
+  width: 100%;
   height: 100%;
+  min-height: 400px;
 }
 
 .banner-carousel :deep(.el-carousel__container) {
+  width: 100%;
   height: 100%;
 }
 
 .banner-carousel :deep(.el-carousel__item) {
+  width: 100%;
   height: 100%;
 }
 
@@ -272,14 +277,6 @@ onMounted(() => {
 
 /* 响应式设计 */
 @media (max-width: 768px) {
-  .home-banner {
-    height: 300px;
-  }
-
-  .banner-carousel {
-    height: 300px;
-  }
-
   .banner-overlay {
     padding: var(--spacing-lg);
   }
@@ -296,20 +293,12 @@ onMounted(() => {
     font-size: var(--font-size-xl);
   }
 
-  .arrow {
+  .banner-carousel :deep(.el-carousel__arrow) {
     display: none;
   }
 }
 
 @media (max-width: 480px) {
-  .home-banner {
-    height: 250px;
-  }
-
-  .banner-carousel {
-    height: 250px;
-  }
-
   .banner-overlay {
     padding: var(--spacing-md);
   }

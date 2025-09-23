@@ -13,6 +13,7 @@
   --success-color: #52c41a;           /* 成功绿色 */
   --warning-color: #faad14;           /* 警告黄色 */
   --error-color: #ff4d4f;             /* 错误红色 */
+  --danger-color: #ff4d4f;            /* 危险红色 */
   --info-color: #1890ff;              /* 信息蓝色 */
   
   /* 文字颜色 */
@@ -36,11 +37,15 @@
   
   /* 阴影 */
   --shadow-light: 0 2px 4px rgba(0, 0, 0, 0.1);
+  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.1);
   --shadow-base: 0 4px 8px rgba(0, 0, 0, 0.15);
+  --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.15);
   --shadow-dark: 0 8px 16px rgba(0, 0, 0, 0.2);
+  --shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.2);
   
   /* 圆角 */
   --radius-small: 4px;
+  --radius-sm: 4px;
   --radius-base: 6px;
   --radius-large: 8px;
   --radius-round: 50%;
@@ -60,6 +65,7 @@
   --font-size-lg: 18px;
   --font-size-xl: 20px;
   --font-size-xxl: 24px;
+  --font-size-xxxl: 32px;
   --font-size-title: 28px;
   
   /* 字体粗细 */
@@ -85,6 +91,7 @@
   
   /* 动画时间 */
   --transition-fast: 0.15s;
+  --transition-normal: 0.3s;
   --transition-base: 0.3s;
   --transition-slow: 0.5s;
   
