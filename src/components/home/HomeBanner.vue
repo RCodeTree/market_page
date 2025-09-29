@@ -148,7 +148,7 @@ onMounted(() => {
 .banner-carousel :deep(.el-carousel__arrow) {
   background-color: rgba(0, 0, 0, 0.5);
   border: none;
-  color: var(--text-white);
+  color: #ffffff;
   width: 50px;
   height: 50px;
 }
@@ -176,7 +176,7 @@ onMounted(() => {
 }
 
 .banner-carousel :deep(.el-carousel__indicator.is-active .el-carousel__button) {
-  background-color: var(--primary-color);
+  background-color: #e23e3e;
 }
 
 .banner-item {
@@ -207,112 +207,211 @@ onMounted(() => {
       rgba(0, 0, 0, 0.1) 100%);
   display: flex;
   align-items: center;
-  padding: var(--spacing-xxl);
+  padding: 32px;
 }
 
 .banner-info {
   max-width: 500px;
-  color: var(--text-white);
+  color: #ffffff;
 }
 
 .banner-title {
-  font-size: var(--font-size-xxxl);
-  font-weight: var(--font-weight-bold);
-  margin: 0 0 var(--spacing-md) 0;
-  line-height: var(--line-height-tight);
+  font-size: 36px;
+  font-weight: 700;
+  margin: 0 0 16px 0;
+  line-height: 1.2;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
 }
 
 .banner-subtitle {
-  font-size: var(--font-size-lg);
-  margin: 0 0 var(--spacing-lg) 0;
-  line-height: var(--line-height-normal);
+  font-size: 18px;
+  margin: 0 0 24px 0;
+  line-height: 1.5;
   opacity: 0.9;
 }
 
 .banner-price {
   display: flex;
   align-items: center;
-  gap: var(--spacing-sm);
-  margin-bottom: var(--spacing-xl);
+  gap: 8px;
+  margin-bottom: 32px;
 }
 
 .price-label {
-  background-color: var(--danger-color);
-  color: var(--text-white);
-  padding: var(--spacing-xs) var(--spacing-sm);
-  border-radius: var(--radius-sm);
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-medium);
+  background-color: #ff4d4f;
+  color: #ffffff;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 500;
 }
 
 .price-value {
-  font-size: var(--font-size-xxl);
-  font-weight: var(--font-weight-bold);
-  color: var(--warning-color);
+  font-size: 28px;
+  font-weight: 700;
+  color: #faad14;
 }
 
 .price-original {
-  font-size: var(--font-size-base);
+  font-size: 16px;
   color: rgba(255, 255, 255, 0.7);
   text-decoration: line-through;
 }
 
 .banner-button {
-  padding: var(--spacing-md) var(--spacing-xl);
-  font-size: var(--font-size-base);
-  font-weight: var(--font-weight-medium);
-  border-radius: var(--radius-base);
-  box-shadow: var(--shadow-md);
-  transition: all var(--transition-normal);
+  padding: 16px 32px;
+  font-size: 16px;
+  font-weight: 500;
+  border-radius: 6px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s;
 }
 
 .banner-button:hover {
   transform: translateY(-2px);
-  box-shadow: var(--shadow-lg);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
 }
 
 
 
 /* 响应式设计 */
-@media (max-width: 768px) {
+@media (max-width: 992px) {
   .banner-overlay {
-    padding: var(--spacing-lg);
+    padding: 24px;
   }
 
   .banner-title {
-    font-size: var(--font-size-xxl);
+    font-size: 32px;
   }
 
   .banner-subtitle {
-    font-size: var(--font-size-base);
+    font-size: 16px;
+    margin-bottom: 20px;
   }
 
   .price-value {
-    font-size: var(--font-size-xl);
+    font-size: 24px;
+  }
+
+  .banner-button {
+    padding: 14px 28px;
+    font-size: 15px;
+  }
+}
+
+@media (max-width: 768px) {
+  .banner-overlay {
+    padding: 20px;
+  }
+
+  .banner-title {
+    font-size: 28px;
+    margin-bottom: 12px;
+  }
+
+  .banner-subtitle {
+    font-size: 15px;
+    margin-bottom: 18px;
+  }
+
+  .price-value {
+    font-size: 22px;
+  }
+
+  .banner-price {
+    margin-bottom: 24px;
   }
 
   .banner-carousel :deep(.el-carousel__arrow) {
     display: none;
   }
+
+  .banner-carousel :deep(.el-carousel__indicators) {
+    bottom: 15px;
+  }
 }
 
 @media (max-width: 480px) {
   .banner-overlay {
-    padding: var(--spacing-md);
+    padding: 16px;
+  }
+
+  .banner-info {
+    max-width: 100%;
   }
 
   .banner-title {
-    font-size: var(--font-size-xl);
+    font-size: 24px;
+    margin-bottom: 10px;
   }
 
   .banner-subtitle {
-    font-size: var(--font-size-sm);
+    font-size: 14px;
+    margin-bottom: 16px;
+  }
+
+  .price-value {
+    font-size: 20px;
+  }
+
+  .price-label {
+    font-size: 12px;
+    padding: 3px 6px;
+  }
+
+  .price-original {
+    font-size: 14px;
+  }
+
+  .banner-price {
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    gap: 6px;
   }
 
   .banner-button {
-    padding: var(--spacing-sm) var(--spacing-lg);
-    font-size: var(--font-size-sm);
+    padding: 12px 24px;
+    font-size: 14px;
+  }
+
+  .banner-carousel :deep(.el-carousel__indicators) {
+    bottom: 10px;
+  }
+
+  .banner-carousel :deep(.el-carousel__indicator) {
+    width: 8px;
+    height: 8px;
+    margin: 0 4px;
+  }
+
+  .banner-carousel :deep(.el-carousel__button) {
+    width: 8px;
+    height: 8px;
+  }
+}
+
+@media (max-width: 360px) {
+  .banner-overlay {
+    padding: 12px;
+  }
+
+  .banner-title {
+    font-size: 20px;
+    margin-bottom: 8px;
+  }
+
+  .banner-subtitle {
+    font-size: 13px;
+    margin-bottom: 14px;
+  }
+
+  .price-value {
+    font-size: 18px;
+  }
+
+  .banner-button {
+    padding: 10px 20px;
+    font-size: 13px;
   }
 }
 </style>

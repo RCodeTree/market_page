@@ -150,21 +150,76 @@ const handleClick = (promotion) => {
   .side-promotion {
     flex-direction: row;
     height: auto;
+    gap: 12px;
   }
   
   .promotion-item {
     flex: 1;
+    min-height: 180px;
+    border-radius: 4px;
+  }
+  
+  .promotion-image {
+    min-height: 180px;
+  }
+  
+  .promotion-title {
+    font-size: 16px;
+  }
+  
+  .promotion-desc {
+    font-size: 13px;
+    margin-bottom: 12px;
+  }
+  
+  .promotion-action {
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 768px) {
+  .side-promotion {
+    gap: 10px;
+  }
+  
+  .promotion-item {
     min-height: 150px;
+    border-radius: 4px;
   }
   
   .promotion-image {
     min-height: 150px;
   }
+  
+  .promotion-title {
+    font-size: 15px;
+    margin-bottom: 6px;
+  }
+  
+  .promotion-desc {
+    font-size: 12px;
+    margin-bottom: 10px;
+  }
+  
+  .promotion-action {
+    font-size: 12px;
+    gap: 3px;
+  }
+  
+  .promotion-overlay {
+    padding: 12px;
+  }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 480px) {
+  .side-promotion {
+    flex-direction: column;
+    gap: 8px;
+  }
+  
   .promotion-item {
     min-height: 120px;
+    border-radius: 4px;
   }
   
   .promotion-image {
@@ -172,21 +227,28 @@ const handleClick = (promotion) => {
   }
   
   .promotion-title {
-    font-size: var(--font-size-base);
+    font-size: 14px;
+    margin-bottom: 5px;
   }
   
   .promotion-desc {
-    font-size: var(--font-size-xs);
+    font-size: 11px;
+    margin-bottom: 8px;
+  }
+  
+  .promotion-action {
+    font-size: 11px;
+    gap: 2px;
   }
   
   .promotion-overlay {
-    padding: var(--spacing-sm);
+    padding: 10px;
   }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 360px) {
   .side-promotion {
-    flex-direction: column;
+    gap: 6px;
   }
   
   .promotion-item {
@@ -195,6 +257,24 @@ const handleClick = (promotion) => {
   
   .promotion-image {
     min-height: 100px;
+  }
+  
+  .promotion-title {
+    font-size: 13px;
+    margin-bottom: 4px;
+  }
+  
+  .promotion-desc {
+    font-size: 10px;
+    margin-bottom: 6px;
+  }
+  
+  .promotion-action {
+    font-size: 10px;
+  }
+  
+  .promotion-overlay {
+    padding: 8px;
   }
 }
 </style>

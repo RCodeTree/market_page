@@ -315,23 +315,117 @@ const hideSubMenu = () => {
 
 /* 响应式设计 */
 @media (max-width: 992px) {
+  .category-nav {
+    border-radius: 4px;
+  }
+  
+  .nav-header {
+    padding: 12px 16px;
+    font-size: 15px;
+  }
+  
+  .item-content {
+    padding: 12px 16px;
+  }
+  
+  .item-text {
+    font-size: 14px;
+  }
+  
   .sub-menu {
     width: 500px;
+    border-radius: 4px;
   }
   
   .sub-menu-content {
     grid-template-columns: 1fr;
+    padding: 20px;
+    gap: 20px;
+  }
+  
+  .sub-title {
+    font-size: 15px;
+  }
+  
+  .sub-item {
+    font-size: 13px;
+    padding: 3px 6px;
   }
 }
 
 @media (max-width: 768px) {
+  .category-nav {
+    border-radius: 4px;
+    max-height: 250px;
+    overflow: hidden;
+  }
+  
   .nav-header {
-    padding: 8px 16px;
+    padding: 10px 14px;
     font-size: 14px;
   }
   
+  .nav-list {
+    max-height: 200px;
+    overflow-y: auto;
+  }
+  
   .item-content {
-    padding: 8px 16px;
+    padding: 10px 14px;
+  }
+  
+  .item-text {
+    font-size: 13px;
+  }
+  
+  .arrow-icon {
+    font-size: 12px;
+  }
+  
+  .sub-menu {
+    width: calc(100vw - 24px);
+    left: -180px;
+    border-radius: 4px;
+    max-height: 300px;
+    overflow-y: auto;
+  }
+  
+  .sub-menu-content {
+    padding: 16px;
+    gap: 16px;
+  }
+  
+  .sub-category {
+    margin-bottom: 12px;
+  }
+  
+  .sub-title {
+    font-size: 14px;
+    margin-bottom: 6px;
+  }
+  
+  .sub-item {
+    font-size: 12px;
+    padding: 2px 5px;
+  }
+}
+
+@media (max-width: 480px) {
+  .category-nav {
+    max-height: 200px;
+  }
+  
+  .nav-header {
+    padding: 8px 12px;
+    font-size: 13px;
+  }
+  
+  .nav-list {
+    max-height: 150px;
+  }
+  
+  .item-content {
+    padding: 8px 12px;
   }
   
   .item-text {
@@ -339,8 +433,62 @@ const hideSubMenu = () => {
   }
   
   .sub-menu {
-    width: 100vw;
-    left: -200px;
+    width: calc(100vw - 16px);
+    left: -160px;
+    max-height: 250px;
+  }
+  
+  .sub-menu-content {
+    padding: 12px;
+    gap: 12px;
+  }
+  
+  .sub-category {
+    margin-bottom: 10px;
+  }
+  
+  .sub-title {
+    font-size: 13px;
+    margin-bottom: 5px;
+  }
+  
+  .sub-item {
+    font-size: 11px;
+    padding: 2px 4px;
+  }
+}
+
+@media (max-width: 360px) {
+  .category-nav {
+    max-height: 180px;
+  }
+  
+  .nav-header {
+    padding: 6px 10px;
+    font-size: 12px;
+  }
+  
+  .nav-list {
+    max-height: 130px;
+  }
+  
+  .item-content {
+    padding: 6px 10px;
+  }
+  
+  .item-text {
+    font-size: 11px;
+  }
+  
+  .sub-menu {
+    width: calc(100vw - 12px);
+    left: -140px;
+    max-height: 200px;
+  }
+  
+  .sub-menu-content {
+    padding: 10px;
+    gap: 10px;
   }
 }
 </style>

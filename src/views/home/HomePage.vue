@@ -165,20 +165,25 @@ onMounted(() => {
 @media (max-width: 1200px) {
   .main-content {
     grid-template-columns: 180px 1fr 250px;
-    gap: 8px;
+    gap: 12px;
+    padding: 12px;
   }
 }
 
 @media (max-width: 992px) {
   .main-content {
     grid-template-columns: 1fr;
+    grid-template-rows: auto;
     gap: 16px;
-    padding: 8px;
+    padding: 16px;
+    height: auto;
   }
   
   .left-sidebar {
     order: 2;
-    display: none; /* 在平板端隐藏左侧导航 */
+    height: auto;
+    max-height: 300px;
+    display: block; /* 在平板端显示左侧导航 */
   }
   
   .center-banner {
@@ -191,24 +196,32 @@ onMounted(() => {
   .right-sidebar {
     order: 3;
     height: auto;
+    min-height: 200px;
   }
 }
 
 @media (max-width: 768px) {
   .main-content {
-    padding: 4px;
-    gap: 8px;
-    height: 250px;
+    padding: 12px;
+    gap: 12px;
+    height: auto;
+  }
+  
+  .left-sidebar {
+    height: auto;
+    max-height: 250px;
   }
   
   .center-banner {
-    height: 100%;
+    height: 250px;
     display: flex;
     align-items: stretch;
   }
   
   .right-sidebar {
-    display: none; /* 在移动端隐藏右侧推广 */
+    display: block; /* 在移动端显示右侧推广 */
+    height: auto;
+    min-height: 150px;
   }
   
   .quick-section,
@@ -216,21 +229,35 @@ onMounted(() => {
   .categories-section,
   .new-products-section,
   .brands-section {
-    padding: 24px 8px;
+    padding: 20px 12px;
   }
 }
 
 @media (max-width: 480px) {
+  .home-page {
+    padding: 0;
+  }
+  
   .main-content {
-    padding: 4px;
-    gap: 4px;
-    height: 200px;
+    padding: 8px;
+    gap: 8px;
+    height: auto;
+  }
+  
+  .left-sidebar {
+    height: auto;
+    max-height: 200px;
   }
   
   .center-banner {
-    height: 100%;
+    height: 200px;
     display: flex;
     align-items: stretch;
+  }
+  
+  .right-sidebar {
+    height: auto;
+    min-height: 120px;
   }
   
   .quick-section,
@@ -238,7 +265,35 @@ onMounted(() => {
   .categories-section,
   .new-products-section,
   .brands-section {
-    padding: 16px 4px;
+    padding: 16px 8px;
+  }
+}
+
+/* 超小屏幕优化 */
+@media (max-width: 360px) {
+  .main-content {
+    padding: 6px;
+    gap: 6px;
+  }
+  
+  .center-banner {
+    height: 180px;
+  }
+  
+  .left-sidebar {
+    max-height: 180px;
+  }
+  
+  .right-sidebar {
+    min-height: 100px;
+  }
+  
+  .quick-section,
+  .recommend-section,
+  .categories-section,
+  .new-products-section,
+  .brands-section {
+    padding: 12px 6px;
   }
 }
 </style>
