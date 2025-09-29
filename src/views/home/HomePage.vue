@@ -93,11 +93,12 @@ onMounted(() => {
 .main-content {
   display: grid;
   grid-template-columns: 200px 1fr 300px;
+  grid-template-rows: 400px;
   gap: 16px;
   max-width: 1200px;
   margin: 0 auto;
   padding: 16px;
-  min-height: 400px;
+  height: 400px;
 }
 
 /* PC端大屏幕优化 */
@@ -116,6 +117,9 @@ onMounted(() => {
   overflow: hidden;
   border: 1px solid #f0f0f0;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 .center-banner {
@@ -124,7 +128,7 @@ onMounted(() => {
   overflow: hidden;
   border: 1px solid #f0f0f0;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  height: 400px;
+  height: 100%;
   display: flex;
   align-items: stretch;
 }
@@ -140,6 +144,9 @@ onMounted(() => {
   overflow: hidden;
   border: 1px solid #f0f0f0;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 .quick-section,
@@ -152,52 +159,7 @@ onMounted(() => {
   padding: 32px 16px;
 }
 
-.category-nav {
-  background-color: var(--bg-white);
-  border-radius: var(--radius-base);
-  box-shadow: var(--shadow-sm);
-}
 
-.main-banner {
-  border-radius: var(--radius-base);
-  overflow: hidden;
-  box-shadow: var(--shadow-md);
-}
-
-.side-promotion {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-md);
-}
-
-.quick-entry-section,
-.recommend-section,
-.hot-category-section,
-.new-products-section,
-.brand-section {
-  padding: var(--spacing-xxl) 0;
-}
-
-.quick-entry-section {
-  background-color: var(--bg-white);
-  border-bottom: 1px solid var(--border-light);
-}
-
-.recommend-section {
-  background-color: var(--bg-light);
-}
-
-.hot-category-section {
-  background-color: var(--bg-white);
-}
-
-.new-products-section {
-  background-color: var(--bg-light);
-}
-
-.brand-section {
-  background-color: var(--bg-white);
-}
 
 /* 响应式设计 */
 @media (max-width: 1200px) {
@@ -234,12 +196,13 @@ onMounted(() => {
 
 @media (max-width: 768px) {
   .main-content {
-    padding: var(--spacing-xs);
-    gap: var(--spacing-sm);
+    padding: 4px;
+    gap: 8px;
+    height: 250px;
   }
   
   .center-banner {
-    height: 250px;
+    height: 100%;
     display: flex;
     align-items: stretch;
   }
@@ -253,18 +216,19 @@ onMounted(() => {
   .categories-section,
   .new-products-section,
   .brands-section {
-    padding: var(--spacing-lg) var(--spacing-sm);
+    padding: 24px 8px;
   }
 }
 
 @media (max-width: 480px) {
   .main-content {
-    padding: var(--spacing-xs);
-    gap: var(--spacing-xs);
+    padding: 4px;
+    gap: 4px;
+    height: 200px;
   }
   
   .center-banner {
-    height: 200px;
+    height: 100%;
     display: flex;
     align-items: stretch;
   }
@@ -274,7 +238,7 @@ onMounted(() => {
   .categories-section,
   .new-products-section,
   .brands-section {
-    padding: var(--spacing-md) var(--spacing-xs);
+    padding: 16px 4px;
   }
 }
 </style>

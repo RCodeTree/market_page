@@ -170,6 +170,9 @@ const hideSubMenu = () => {
   overflow: hidden;
   position: relative;
   border: 1px solid #f0f0f0;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 .nav-header {
@@ -183,8 +186,8 @@ const hideSubMenu = () => {
 }
 
 .nav-list {
-  max-height: 350px;
-  overflow-y: auto;
+  flex: 1;
+  overflow: hidden;
 }
 
 .nav-item {
