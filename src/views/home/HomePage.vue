@@ -2,19 +2,40 @@
   <div class="home-page">
     <!-- 主要内容区域 -->
     <div class="main-content">
-      <!-- 左侧分类导航 -->
-      <div class="left-sidebar">
-        <CategoryNav />
+      <!-- PC端布局 -->
+      <div class="pc-layout" v-show="!isMobile">
+        <!-- 左侧分类导航 -->
+        <div class="left-sidebar">
+          <CategoryNav />
+        </div>
+        
+        <!-- 中间轮播图区域 -->
+        <div class="center-banner">
+          <HomeBanner />
+        </div>
+        
+        <!-- 右侧推广区域 -->
+        <div class="right-sidebar">
+          <SidePromotion />
+        </div>
       </div>
-      
-      <!-- 中间轮播图区域 -->
-      <div class="center-banner">
-        <HomeBanner />
-      </div>
-      
-      <!-- 右侧推广区域 -->
-      <div class="right-sidebar">
-        <SidePromotion />
+
+      <!-- 移动端布局 -->
+      <div class="mobile-layout" v-show="isMobile">
+        <!-- 移动端轮播图 -->
+        <div class="mobile-banner">
+          <HomeBanner />
+        </div>
+        
+        <!-- 移动端分类导航 -->
+        <div class="mobile-category">
+          <CategoryNav />
+        </div>
+        
+        <!-- 移动端推广区域 -->
+        <div class="mobile-promotion">
+          <SidePromotion />
+        </div>
       </div>
     </div>
     
@@ -66,7 +87,7 @@
 </template>
 
 <script setup>
-import { onMounted } from 'vue'
+import { ref, onMounted, onUnmounted } from 'vue'
 import CategoryNav from '@/components/home/CategoryNav.vue'
 import HomeBanner from '@/components/home/HomeBanner.vue'
 import SidePromotion from '@/components/home/SidePromotion.vue'
@@ -74,13 +95,24 @@ import QuickEntry from '@/components/home/QuickEntry.vue'
 import SectionTitle from '@/components/common/SectionTitle.vue'
 import RecommendProducts from '@/components/home/RecommendProducts.vue'
 import HotCategories from '@/components/home/HotCategories.vue'
-
 import BrandRecommend from '@/components/home/BrandRecommend.vue'
+
+const isMobile = ref(false)
+
+// 检测屏幕尺寸
+const checkScreenSize = () => {
+  isMobile.value = window.innerWidth <= 768
+}
 
 // 页面初始化
 onMounted(() => {
   console.log('首页加载完成')
-  // 可以在这里加载页面数据
+  checkScreenSize()
+  window.addEventListener('resize', checkScreenSize)
+})
+
+onUnmounted(() => {
+  window.removeEventListener('resize', checkScreenSize)
 })
 </script>
 
@@ -91,13 +123,17 @@ onMounted(() => {
 }
 
 .main-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 16px;
+}
+
+/* PC端布局 */
+.pc-layout {
   display: grid;
   grid-template-columns: 200px 1fr 300px;
   grid-template-rows: 400px;
   gap: 16px;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 16px;
   height: 400px;
 }
 
@@ -105,9 +141,12 @@ onMounted(() => {
 @media (min-width: 1400px) {
   .main-content {
     max-width: 1400px;
+    padding: 24px;
+  }
+  
+  .pc-layout {
     grid-template-columns: 220px 1fr 320px;
     gap: 24px;
-    padding: 24px;
   }
 }
 
@@ -149,6 +188,40 @@ onMounted(() => {
   flex-direction: column;
 }
 
+/* 移动端布局 */
+.mobile-layout {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.mobile-banner {
+  background-color: #ffffff;
+  border-radius: 6px;
+  overflow: hidden;
+  border: 1px solid #f0f0f0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  height: 250px;
+}
+
+.mobile-category {
+  background-color: #ffffff;
+  border-radius: 6px;
+  overflow: hidden;
+  border: 1px solid #f0f0f0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  min-height: 120px;
+}
+
+.mobile-promotion {
+  background-color: #ffffff;
+  border-radius: 6px;
+  overflow: hidden;
+  border: 1px solid #f0f0f0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  min-height: 100px;
+}
+
 .quick-section,
 .recommend-section,
 .categories-section,
@@ -159,69 +232,55 @@ onMounted(() => {
   padding: 32px 16px;
 }
 
-
-
 /* 响应式设计 */
 @media (max-width: 1200px) {
-  .main-content {
+  .pc-layout {
     grid-template-columns: 180px 1fr 250px;
     gap: 12px;
+  }
+  
+  .main-content {
     padding: 12px;
   }
 }
 
 @media (max-width: 992px) {
+  .pc-layout {
+    grid-template-columns: 160px 1fr 220px;
+    gap: 10px;
+  }
+  
   .main-content {
-    grid-template-columns: 1fr;
-    grid-template-rows: auto;
-    gap: 16px;
-    padding: 16px;
-    height: auto;
-  }
-  
-  .left-sidebar {
-    order: 2;
-    height: auto;
-    max-height: 300px;
-    display: block; /* 在平板端显示左侧导航 */
-  }
-  
-  .center-banner {
-    order: 1;
-    height: 300px;
-    display: flex;
-    align-items: stretch;
-  }
-  
-  .right-sidebar {
-    order: 3;
-    height: auto;
-    min-height: 200px;
+    padding: 10px;
   }
 }
 
 @media (max-width: 768px) {
+  .pc-layout {
+    display: none;
+  }
+  
+  .mobile-layout {
+    display: flex;
+  }
+  
   .main-content {
     padding: 12px;
-    gap: 12px;
-    height: auto;
   }
   
-  .left-sidebar {
-    height: auto;
-    max-height: 250px;
+  .mobile-banner {
+    height: 220px;
+    border-radius: 4px;
   }
   
-  .center-banner {
-    height: 250px;
-    display: flex;
-    align-items: stretch;
+  .mobile-category {
+    min-height: 100px;
+    border-radius: 4px;
   }
   
-  .right-sidebar {
-    display: block; /* 在移动端显示右侧推广 */
-    height: auto;
-    min-height: 150px;
+  .mobile-promotion {
+    min-height: 80px;
+    border-radius: 4px;
   }
   
   .quick-section,
@@ -240,24 +299,25 @@ onMounted(() => {
   
   .main-content {
     padding: 8px;
+  }
+  
+  .mobile-layout {
     gap: 8px;
-    height: auto;
   }
   
-  .left-sidebar {
-    height: auto;
-    max-height: 200px;
+  .mobile-banner {
+    height: 180px;
+    border-radius: 4px;
   }
   
-  .center-banner {
-    height: 200px;
-    display: flex;
-    align-items: stretch;
+  .mobile-category {
+    min-height: 80px;
+    border-radius: 4px;
   }
   
-  .right-sidebar {
-    height: auto;
-    min-height: 120px;
+  .mobile-promotion {
+    min-height: 60px;
+    border-radius: 4px;
   }
   
   .quick-section,
@@ -269,23 +329,25 @@ onMounted(() => {
   }
 }
 
-/* 超小屏幕优化 */
 @media (max-width: 360px) {
   .main-content {
     padding: 6px;
+  }
+  
+  .mobile-layout {
     gap: 6px;
   }
   
-  .center-banner {
-    height: 180px;
+  .mobile-banner {
+    height: 160px;
   }
   
-  .left-sidebar {
-    max-height: 180px;
+  .mobile-category {
+    min-height: 70px;
   }
   
-  .right-sidebar {
-    min-height: 100px;
+  .mobile-promotion {
+    min-height: 50px;
   }
   
   .quick-section,
@@ -294,6 +356,17 @@ onMounted(() => {
   .new-products-section,
   .brands-section {
     padding: 12px 6px;
+  }
+}
+
+/* 隐藏移动端布局在PC端 */
+@media (min-width: 769px) {
+  .mobile-layout {
+    display: none;
+  }
+  
+  .pc-layout {
+    display: grid;
   }
 }
 </style>

@@ -1,20 +1,33 @@
 <template>
   <div class="home-banner">
-    <el-carousel :interval="5000" :arrow="arrow" indicator-position="inside" height="100%" class="banner-carousel">
+    <el-carousel 
+      :interval="5000" 
+      :arrow="arrow" 
+      indicator-position="inside" 
+      height="100%" 
+      class="banner-carousel"
+      :autoplay="autoplay"
+      :touch="true"
+    >
       <el-carousel-item v-for="banner in banners" :key="banner.id" class="banner-item">
         <div class="banner-content" :style="{ backgroundImage: `url(${banner.image})` }"
           @click="handleBannerClick(banner)">
           <div class="banner-overlay">
             <div class="banner-info">
-              <h3 class="banner-title">{{ banner.title }}</h3>
-              <p class="banner-subtitle">{{ banner.subtitle }}</p>
+              <h3 class="banner-title">{{ isMobile ? banner.shortTitle || banner.title : banner.title }}</h3>
+              <p class="banner-subtitle" v-if="!isMobile || banner.showSubtitleOnMobile">{{ banner.subtitle }}</p>
               <div class="banner-price" v-if="banner.price">
                 <span class="price-label">限时特价</span>
                 <span class="price-value">¥{{ banner.price }}</span>
-                <span class="price-original" v-if="banner.originalPrice">¥{{ banner.originalPrice }}</span>
+                <span class="price-original" v-if="banner.originalPrice && (!isMobile || banner.showOriginalPriceOnMobile)">¥{{ banner.originalPrice }}</span>
               </div>
-              <el-button v-if="banner.buttonText" type="primary" size="large" class="banner-button"
-                @click.stop="handleButtonClick(banner)">
+              <el-button 
+                v-if="banner.buttonText" 
+                type="primary" 
+                :size="isMobile ? 'default' : 'large'" 
+                class="banner-button"
+                @click.stop="handleButtonClick(banner)"
+              >
                 {{ banner.buttonText }}
               </el-button>
             </div>
@@ -26,22 +39,28 @@
 </template>
 
 <script setup>
-import { ref, reactive, onMounted } from 'vue'
+import { ref, reactive, computed, onMounted, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
 
 const router = useRouter()
-const arrow = ref('hover')
+const isMobile = ref(false)
+
+// 响应式配置
+const arrow = computed(() => isMobile.value ? 'never' : 'hover')
+const autoplay = computed(() => !isMobile.value || true) // 移动端也启用自动播放
 
 // 轮播图数据
 const banners = reactive([
   {
     id: 1,
     title: '新年大促销',
-    subtitle: '全场商品5折起，限时抢购',
     shortTitle: '新年大促',
+    subtitle: '全场商品5折起，限时抢购',
+    showSubtitleOnMobile: false,
     image: 'https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?w=800&h=400&fit=crop',
     price: '299',
     originalPrice: '599',
+    showOriginalPriceOnMobile: true,
     buttonText: '立即抢购',
     link: '/products?category=promotion',
     type: 'promotion'
@@ -49,11 +68,13 @@ const banners = reactive([
   {
     id: 2,
     title: '智能手机专场',
-    subtitle: '最新款智能手机，科技改变生活',
     shortTitle: '智能手机',
+    subtitle: '最新款智能手机，科技改变生活',
+    showSubtitleOnMobile: false,
     image: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=800&h=400&fit=crop',
     price: '2999',
     originalPrice: '3999',
+    showOriginalPriceOnMobile: false,
     buttonText: '查看详情',
     link: '/products?category=phone',
     type: 'product'
@@ -61,11 +82,13 @@ const banners = reactive([
   {
     id: 3,
     title: '电脑数码节',
-    subtitle: '办公学习必备，高性能电脑推荐',
     shortTitle: '电脑数码',
+    subtitle: '办公学习必备，高性能电脑推荐',
+    showSubtitleOnMobile: false,
     image: 'https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=800&h=400&fit=crop',
     price: '4999',
     originalPrice: '6999',
+    showOriginalPriceOnMobile: false,
     buttonText: '立即购买',
     link: '/products?category=computer',
     type: 'product'
@@ -73,11 +96,13 @@ const banners = reactive([
   {
     id: 4,
     title: '时尚服饰',
-    subtitle: '春季新款上市，穿出你的风格',
     shortTitle: '时尚服饰',
+    subtitle: '春季新款上市，穿出你的风格',
+    showSubtitleOnMobile: true,
     image: 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=800&h=400&fit=crop',
     price: '199',
     originalPrice: '399',
+    showOriginalPriceOnMobile: true,
     buttonText: '逛逛看',
     link: '/products?category=fashion',
     type: 'category'
@@ -85,16 +110,23 @@ const banners = reactive([
   {
     id: 5,
     title: '家居生活',
-    subtitle: '品质生活从家开始，精选家居好物',
     shortTitle: '家居生活',
+    subtitle: '品质生活从家开始，精选家居好物',
+    showSubtitleOnMobile: false,
     image: 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=800&h=400&fit=crop',
     price: '599',
     originalPrice: '999',
+    showOriginalPriceOnMobile: false,
     buttonText: '发现更多',
     link: '/products?category=home',
     type: 'category'
   }
 ])
+
+// 检测屏幕尺寸
+const checkScreenSize = () => {
+  isMobile.value = window.innerWidth <= 768
+}
 
 // 处理轮播图点击
 const handleBannerClick = (banner) => {
@@ -113,11 +145,14 @@ const handleButtonClick = (banner) => {
   }
 }
 
-
-
 onMounted(() => {
-  // 可以在这里加载轮播图数据
   console.log('轮播图组件加载完成')
+  checkScreenSize()
+  window.addEventListener('resize', checkScreenSize)
+})
+
+onUnmounted(() => {
+  window.removeEventListener('resize', checkScreenSize)
 })
 </script>
 
@@ -165,7 +200,6 @@ onMounted(() => {
   width: 12px;
   height: 12px;
   margin: 0 6px;
-  /* 增加圆点指示器之间的间距 */
 }
 
 .banner-carousel :deep(.el-carousel__button) {
@@ -235,6 +269,7 @@ onMounted(() => {
   align-items: center;
   gap: 8px;
   margin-bottom: 32px;
+  flex-wrap: wrap;
 }
 
 .price-label {
@@ -272,8 +307,6 @@ onMounted(() => {
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
 }
 
-
-
 /* 响应式设计 */
 @media (max-width: 992px) {
   .banner-overlay {
@@ -300,40 +333,15 @@ onMounted(() => {
 }
 
 @media (max-width: 768px) {
+  .banner-carousel {
+    min-height: 250px;
+  }
+
   .banner-overlay {
     padding: 20px;
-  }
-
-  .banner-title {
-    font-size: 28px;
-    margin-bottom: 12px;
-  }
-
-  .banner-subtitle {
-    font-size: 15px;
-    margin-bottom: 18px;
-  }
-
-  .price-value {
-    font-size: 22px;
-  }
-
-  .banner-price {
-    margin-bottom: 24px;
-  }
-
-  .banner-carousel :deep(.el-carousel__arrow) {
-    display: none;
-  }
-
-  .banner-carousel :deep(.el-carousel__indicators) {
-    bottom: 15px;
-  }
-}
-
-@media (max-width: 480px) {
-  .banner-overlay {
-    padding: 16px;
+    background: linear-gradient(135deg,
+        rgba(0, 0, 0, 0.7) 0%,
+        rgba(0, 0, 0, 0.4) 100%);
   }
 
   .banner-info {
@@ -342,12 +350,19 @@ onMounted(() => {
 
   .banner-title {
     font-size: 24px;
-    margin-bottom: 10px;
+    margin-bottom: 12px;
+    line-height: 1.3;
   }
 
   .banner-subtitle {
     font-size: 14px;
     margin-bottom: 16px;
+    line-height: 1.4;
+  }
+
+  .banner-price {
+    margin-bottom: 20px;
+    gap: 6px;
   }
 
   .price-value {
@@ -363,19 +378,17 @@ onMounted(() => {
     font-size: 14px;
   }
 
-  .banner-price {
-    margin-bottom: 20px;
-    flex-wrap: wrap;
-    gap: 6px;
-  }
-
   .banner-button {
-    padding: 12px 24px;
+    padding: 10px 20px;
     font-size: 14px;
   }
 
+  .banner-carousel :deep(.el-carousel__arrow) {
+    display: none;
+  }
+
   .banner-carousel :deep(.el-carousel__indicators) {
-    bottom: 10px;
+    bottom: 12px;
   }
 
   .banner-carousel :deep(.el-carousel__indicator) {
@@ -390,28 +403,142 @@ onMounted(() => {
   }
 }
 
-@media (max-width: 360px) {
+@media (max-width: 480px) {
+  .banner-carousel {
+    min-height: 200px;
+  }
+
   .banner-overlay {
-    padding: 12px;
+    padding: 16px;
+    align-items: flex-end;
+    background: linear-gradient(to top,
+        rgba(0, 0, 0, 0.8) 0%,
+        rgba(0, 0, 0, 0.4) 50%,
+        rgba(0, 0, 0, 0.1) 100%);
+  }
+
+  .banner-info {
+    width: 100%;
   }
 
   .banner-title {
     font-size: 20px;
     margin-bottom: 8px;
+    font-weight: 600;
   }
 
   .banner-subtitle {
     font-size: 13px;
-    margin-bottom: 14px;
+    margin-bottom: 12px;
+    opacity: 0.95;
+  }
+
+  .banner-price {
+    margin-bottom: 16px;
+    gap: 4px;
+    align-items: flex-start;
   }
 
   .price-value {
     font-size: 18px;
   }
 
+  .price-label {
+    font-size: 11px;
+    padding: 2px 5px;
+  }
+
+  .price-original {
+    font-size: 12px;
+  }
+
   .banner-button {
-    padding: 10px 20px;
+    padding: 8px 16px;
     font-size: 13px;
+    border-radius: 4px;
+  }
+
+  .banner-carousel :deep(.el-carousel__indicators) {
+    bottom: 8px;
+  }
+
+  .banner-carousel :deep(.el-carousel__indicator) {
+    width: 6px;
+    height: 6px;
+    margin: 0 3px;
+  }
+
+  .banner-carousel :deep(.el-carousel__button) {
+    width: 6px;
+    height: 6px;
+  }
+}
+
+@media (max-width: 360px) {
+  .banner-carousel {
+    min-height: 180px;
+  }
+
+  .banner-overlay {
+    padding: 12px;
+  }
+
+  .banner-title {
+    font-size: 18px;
+    margin-bottom: 6px;
+  }
+
+  .banner-subtitle {
+    font-size: 12px;
+    margin-bottom: 10px;
+  }
+
+  .banner-price {
+    margin-bottom: 12px;
+  }
+
+  .price-value {
+    font-size: 16px;
+  }
+
+  .price-label {
+    font-size: 10px;
+    padding: 2px 4px;
+  }
+
+  .price-original {
+    font-size: 11px;
+  }
+
+  .banner-button {
+    padding: 6px 12px;
+    font-size: 12px;
+  }
+}
+
+/* 触摸优化 */
+@media (hover: none) and (pointer: coarse) {
+  .banner-item {
+    -webkit-tap-highlight-color: transparent;
+  }
+  
+  .banner-button {
+    -webkit-tap-highlight-color: rgba(226, 62, 62, 0.3);
+  }
+  
+  .banner-button:active {
+    transform: scale(0.98);
+  }
+}
+
+/* 高分辨率屏幕优化 */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .banner-title {
+    text-rendering: optimizeLegibility;
+  }
+  
+  .banner-subtitle {
+    text-rendering: optimizeLegibility;
   }
 }
 </style>
