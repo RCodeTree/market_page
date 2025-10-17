@@ -1,47 +1,22 @@
 <template>
-  <el-dialog
-    v-model="userStore.showLoginModal"
-    :title="isLogin ? '登录' : '注册'"
-    width="400px"
-    :close-on-click-modal="false"
-    :close-on-press-escape="false"
-    class="login-modal"
-  >
+  <el-dialog v-model="userStore.showLoginModal" :title="isLogin ? '登录' : '注册'" width="400px"
+    :close-on-click-modal="false" :close-on-press-escape="false" class="login-modal">
     <div class="modal-content">
       <!-- 登录表单 -->
-      <el-form
-        v-if="isLogin"
-        ref="loginFormRef"
-        :model="loginForm"
-        :rules="loginRules"
-        label-width="0"
-        class="login-form"
-      >
+      <el-form v-if="isLogin" ref="loginFormRef" :model="loginForm" :rules="loginRules" label-width="0"
+        class="login-form">
         <div class="form-header">
           <h3 class="form-title">欢迎登录宁北商城</h3>
           <p class="form-subtitle">请输入您的账号和密码</p>
         </div>
 
         <el-form-item prop="username">
-          <el-input
-            v-model="loginForm.username"
-            placeholder="请输入用户名/手机号/邮箱"
-            size="large"
-            :prefix-icon="User"
-            clearable
-          />
+          <el-input v-model="loginForm.username" placeholder="请输入用户名" size="large" :prefix-icon="User" clearable />
         </el-form-item>
 
         <el-form-item prop="password">
-          <el-input
-            v-model="loginForm.password"
-            type="password"
-            placeholder="请输入密码"
-            size="large"
-            :prefix-icon="Lock"
-            show-password
-            clearable
-          />
+          <el-input v-model="loginForm.password" type="password" placeholder="请输入密码" size="large" :prefix-icon="Lock"
+            show-password clearable />
         </el-form-item>
 
         <div class="form-options">
@@ -49,13 +24,7 @@
           <a href="#" class="forgot-link">忘记密码？</a>
         </div>
 
-        <el-button
-          type="primary"
-          size="large"
-          class="submit-btn"
-          :loading="loading"
-          @click="handleLogin"
-        >
+        <el-button type="primary" size="large" class="submit-btn" :loading="loading" @click="handleLogin">
           登录
         </el-button>
 
@@ -66,51 +35,25 @@
       </el-form>
 
       <!-- 注册表单 -->
-      <el-form
-        v-else
-        ref="registerFormRef"
-        :model="registerForm"
-        :rules="registerRules"
-        label-width="0"
-        class="register-form"
-      >
+      <el-form v-else ref="registerFormRef" :model="registerForm" :rules="registerRules" label-width="0"
+        class="register-form">
         <div class="form-header">
           <h3 class="form-title">注册宁北商城</h3>
           <p class="form-subtitle">创建您的专属账号</p>
         </div>
 
         <el-form-item prop="username">
-          <el-input
-            v-model="registerForm.username"
-            placeholder="请输入用户名"
-            size="large"
-            :prefix-icon="User"
-            clearable
-          />
+          <el-input v-model="registerForm.username" placeholder="请输入用户名" size="large" :prefix-icon="User" clearable />
         </el-form-item>
 
         <el-form-item prop="password">
-          <el-input
-            v-model="registerForm.password"
-            type="password"
-            placeholder="请输入密码"
-            size="large"
-            :prefix-icon="Lock"
-            show-password
-            clearable
-          />
+          <el-input v-model="registerForm.password" type="password" placeholder="请输入密码" size="large" :prefix-icon="Lock"
+            show-password clearable />
         </el-form-item>
 
         <el-form-item prop="confirmPassword">
-          <el-input
-            v-model="registerForm.confirmPassword"
-            type="password"
-            placeholder="请确认密码"
-            size="large"
-            :prefix-icon="Lock"
-            show-password
-            clearable
-          />
+          <el-input v-model="registerForm.confirmPassword" type="password" placeholder="请确认密码" size="large"
+            :prefix-icon="Lock" show-password clearable />
         </el-form-item>
 
         <div class="form-options">
@@ -122,14 +65,8 @@
           </el-checkbox>
         </div>
 
-        <el-button
-          type="primary"
-          size="large"
-          class="submit-btn"
-          :loading="loading"
-          :disabled="!registerForm.agree"
-          @click="handleRegister"
-        >
+        <el-button type="primary" size="large" class="submit-btn" :loading="loading" :disabled="!registerForm.agree"
+          @click="handleRegister">
           注册
         </el-button>
 
@@ -240,7 +177,7 @@ const handleLogin = async () => {
     if (!valid) return
 
     loading.value = true
-    
+
     const success = await userStore.login({
       username: loginForm.username,
       password: loginForm.password,
@@ -250,13 +187,13 @@ const handleLogin = async () => {
     if (success) {
       ElMessage.success('登录成功')
       userStore.showLoginModal = false
-      
+
       // 如果有重定向路径，跳转到目标页面
       if (userStore.redirectPath) {
         router.push(userStore.redirectPath)
         userStore.redirectPath = ''
       }
-      
+
       resetForms()
     }
   } catch (error) {
@@ -273,7 +210,7 @@ const handleRegister = async () => {
     if (!valid) return
 
     loading.value = true
-    
+
     const success = await userStore.register({
       username: registerForm.username,
       password: registerForm.password
@@ -398,11 +335,11 @@ watch(() => userStore.showLoginModal, (newVal) => {
     width: 90% !important;
     margin: 5vh auto;
   }
-  
+
   .modal-content {
     padding: var(--spacing-lg);
   }
-  
+
   .form-title {
     font-size: var(--font-size-xl);
   }
