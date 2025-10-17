@@ -34,7 +34,7 @@
       <div class="container">
         <div class="filter-bar">
           <div class="filter-left">
-            <el-select v-model="filters.category" placeholder="选择分类" clearable>
+            <el-select v-model="filters.category" placeholder="商品分类" clearable>
               <el-option
                 v-for="category in categories"
                 :key="category.id"
@@ -83,7 +83,7 @@
     <!-- 商品列表 -->
     <div class="products-section">
       <div class="container">
-        <el-loading v-loading="loading" element-loading-text="加载中...">
+        <div class="loading-container" v-loading="loading" element-loading-text="加载中...">
           <div v-if="products.length > 0" :class="['products-grid', viewMode]">
             <div
               v-for="product in products"
@@ -137,7 +137,7 @@
           <div v-else-if="!loading" class="empty-state">
             <el-empty description="暂无商品数据" />
           </div>
-        </el-loading>
+        </div>
         
         <!-- 分页 -->
         <div v-if="total > 0" class="pagination-wrapper">
@@ -339,6 +339,28 @@ onMounted(() => {
   align-items: center;
 }
 
+.filter-left .el-select {
+  min-width: 140px;
+}
+
+.filter-left .el-button {
+  white-space: nowrap;
+}
+
+.filter-item {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+}
+
+.filter-label {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--text-primary);
+  margin-bottom: 4px;
+  white-space: nowrap;
+}
+
 .filter-right {
   display: flex;
   gap: var(--spacing-md);
@@ -351,12 +373,31 @@ onMounted(() => {
 
 .products-section {
   padding: var(--spacing-xl) 0;
+  min-height: calc(100vh - 200px); /* 确保有足够的高度 */
+}
+
+.loading-container {
+  width: 100%;
+  min-height: 600px; /* 增加最小高度 */
+  height: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  background-color: transparent;
+}
+
+/* 当有商品时，loading-container应该包含整个products-grid */
+.loading-container .products-grid {
+  width: 100%;
+  min-height: inherit;
 }
 
 .products-grid {
   display: grid;
   gap: var(--spacing-lg);
   margin-bottom: var(--spacing-xl);
+  width: 100%;
 }
 
 .products-grid.grid {
@@ -535,6 +576,15 @@ onMounted(() => {
     justify-content: center;
   }
 
+  .products-section {
+    padding: var(--spacing-lg) 0;
+    min-height: calc(100vh - 180px); /* 移动端调整高度 */
+  }
+
+  .loading-container {
+    min-height: 500px; /* 移动端适配高度 */
+  }
+
   .products-grid.grid {
     grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
   }
@@ -556,6 +606,15 @@ onMounted(() => {
 }
 
 @media (max-width: 480px) {
+  .products-section {
+    padding: var(--spacing-md) 0;
+    min-height: calc(100vh - 160px); /* 小屏幕进一步调整 */
+  }
+
+  .loading-container {
+    min-height: 400px; /* 小屏幕适配高度 */
+  }
+
   .products-grid.grid {
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   }
