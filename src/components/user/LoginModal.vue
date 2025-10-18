@@ -198,6 +198,7 @@ const handleLogin = async () => {
     }
   } catch (error) {
     console.error('登录失败:', error)
+    ElMessage.error(error.message || '登录失败')
   } finally {
     loading.value = false
   }
@@ -213,7 +214,8 @@ const handleRegister = async () => {
 
     const success = await userStore.register({
       username: registerForm.username,
-      password: registerForm.password
+      password: registerForm.password,
+      confirmPassword: registerForm.confirmPassword
     })
 
     if (success) {
