@@ -5,16 +5,16 @@
         <h1 class="page-title">个人资料</h1>
         <p class="page-subtitle">管理您的个人信息和偏好设置</p>
       </div>
-      
+
       <div class="profile-content">
-        <UserProfile />
+        <UserProfileComponent />
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import UserProfile from '@/components/user/UserProfile.vue'
+import UserProfileComponent from '@/components/user/UserProfileComponent.vue'
 </script>
 
 <style scoped>

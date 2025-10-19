@@ -1,12 +1,7 @@
 <template>
   <div class="recommend-products">
     <div class="products-grid">
-      <div
-        v-for="product in products"
-        :key="product.id"
-        class="product-card"
-        @click="goToProduct(product.id)"
-      >
+      <div v-for="product in products" :key="product.id" class="product-card" @click="goToProduct(product.id)">
         <div class="product-image">
           <img :src="product.image" :alt="product.name" />
           <div class="product-badges">
@@ -15,57 +10,40 @@
             <span v-if="product.discount" class="badge discount">{{ product.discount }}折</span>
           </div>
           <div class="product-actions">
-            <el-button
-              type="primary"
-              size="small"
-              circle
-              @click.stop="addToCart(product)"
-            >
-              <el-icon><ShoppingCart /></el-icon>
+            <el-button type="primary" size="small" circle @click.stop="addToCart(product)">
+              <el-icon>
+                <ShoppingCart />
+              </el-icon>
             </el-button>
-            <el-button
-              type="info"
-              size="small"
-              circle
-              @click.stop="toggleFavorite(product)"
-            >
-              <el-icon><Star /></el-icon>
+            <el-button type="info" size="small" circle @click.stop="toggleFavorite(product)">
+              <el-icon>
+                <Star />
+              </el-icon>
             </el-button>
           </div>
         </div>
-        
+
         <div class="product-info">
           <h4 class="product-name">{{ product.name }}</h4>
           <p class="product-desc">{{ product.description }}</p>
-          
+
           <div class="product-price">
             <span class="current-price">¥{{ product.price }}</span>
             <span v-if="product.originalPrice" class="original-price">¥{{ product.originalPrice }}</span>
           </div>
-          
+
           <div class="product-stats">
             <div class="rating">
-              <el-rate
-                v-model="product.rating"
-                disabled
-                size="small"
-                show-score
-                text-color="#ff9900"
-              />
+              <el-rate v-model="product.rating" disabled size="small" show-score text-color="#ff9900" />
             </div>
             <span class="sales">已售{{ product.sales }}件</span>
           </div>
         </div>
       </div>
     </div>
-    
+
     <div class="load-more">
-      <el-button
-        type="primary"
-        size="large"
-        :loading="loading"
-        @click="loadMore"
-      >
+      <el-button type="primary" size="large" :loading="loading" @click="loadMore">
         查看更多推荐
       </el-button>
     </div>
@@ -406,19 +384,19 @@ onMounted(() => {
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     gap: var(--spacing-sm);
   }
-  
+
   .product-image {
     height: 200px;
   }
-  
+
   .product-info {
     padding: var(--spacing-md);
   }
-  
+
   .product-name {
     font-size: var(--font-size-base);
   }
-  
+
   .current-price {
     font-size: var(--font-size-lg);
   }
@@ -428,27 +406,27 @@ onMounted(() => {
   .products-grid {
     grid-template-columns: repeat(2, 1fr);
   }
-  
+
   .product-image {
     height: 160px;
   }
-  
+
   .product-info {
     padding: var(--spacing-sm);
   }
-  
+
   .product-name {
     font-size: var(--font-size-sm);
   }
-  
+
   .product-desc {
     font-size: var(--font-size-xs);
   }
-  
+
   .current-price {
     font-size: var(--font-size-base);
   }
-  
+
   .product-actions {
     display: none;
   }

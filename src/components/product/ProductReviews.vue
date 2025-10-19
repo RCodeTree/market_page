@@ -6,22 +6,13 @@
         <div class="rating-summary">
           <div class="overall-rating">
             <span class="rating-score">{{ overallRating }}</span>
-            <el-rate
-              v-model="overallRating"
-              disabled
-              show-score
-              text-color="#ff9900"
-              score-template="{value} 分"
-            />
+            <el-rate v-model="overallRating" disabled show-score text-color="#ff9900" score-template="{value} 分" />
           </div>
           <div class="rating-distribution">
             <div v-for="(count, star) in ratingDistribution" :key="star" class="rating-bar">
               <span class="star-label">{{ star }}星</span>
               <div class="progress-bar">
-                <div 
-                  class="progress-fill" 
-                  :style="{ width: (count / totalReviews * 100) + '%' }"
-                ></div>
+                <div class="progress-fill" :style="{ width: (count / totalReviews * 100) + '%' }"></div>
               </div>
               <span class="count">{{ count }}</span>
             </div>
@@ -54,18 +45,12 @@
           </div>
           <el-rate v-model="review.rating" disabled size="small" />
         </div>
-        
+
         <div class="review-content">
           <p class="review-text">{{ review.content }}</p>
           <div v-if="review.images && review.images.length > 0" class="review-images">
-            <el-image
-              v-for="(image, index) in review.images"
-              :key="index"
-              :src="image"
-              :preview-src-list="review.images"
-              class="review-image"
-              fit="cover"
-            />
+            <el-image v-for="(image, index) in review.images" :key="index" :src="image"
+              :preview-src-list="review.images" class="review-image" fit="cover" />
           </div>
         </div>
 
@@ -78,11 +63,7 @@
         </div>
 
         <div class="review-actions">
-          <el-button 
-            text 
-            :icon="review.isHelpful ? 'Check' : 'Plus'"
-            @click="toggleHelpful(review)"
-          >
+          <el-button text :icon="review.isHelpful ? 'Check' : 'Plus'" @click="toggleHelpful(review)">
             有用 ({{ review.helpfulCount }})
           </el-button>
         </div>
@@ -156,7 +137,7 @@ const loadReviews = async () => {
   try {
     // 模拟API调用
     await new Promise(resolve => setTimeout(resolve, 1000))
-    
+
     // 模拟评价数据
     const mockReviews = [
       {
@@ -206,7 +187,7 @@ const loadReviews = async () => {
         isHelpful: true
       }
     ]
-    
+
     reviews.value = mockReviews
   } catch (error) {
     console.error('加载评价失败:', error)
@@ -444,17 +425,17 @@ onMounted(() => {
     flex-direction: column;
     gap: 20px;
   }
-  
+
   .review-header {
     flex-direction: column;
     align-items: flex-start;
     gap: 10px;
   }
-  
+
   .review-images {
     gap: 8px;
   }
-  
+
   .review-image {
     width: 60px;
     height: 60px;

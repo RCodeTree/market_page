@@ -5,27 +5,23 @@
       <div class="container">
         <div class="user-info">
           <div class="avatar-section">
-            <el-avatar 
-              :size="80" 
-              :src="userStore.userAvatar" 
-              class="user-avatar"
-            >
-              <el-icon><User /></el-icon>
+            <el-avatar :size="80" :src="userStore.userAvatar" class="user-avatar">
+              <el-icon>
+                <User />
+              </el-icon>
             </el-avatar>
-            <el-button 
-              type="text" 
-              class="change-avatar-btn"
-              @click="showAvatarUpload = true"
-            >
+            <el-button type="text" class="change-avatar-btn" @click="showAvatarUpload = true">
               更换头像
             </el-button>
           </div>
-          
+
           <div class="user-details">
             <h2 class="username">{{ userStore.userName }}</h2>
             <p class="user-level">
               <el-tag type="warning" size="small">
-                <el-icon><Crown /></el-icon>
+                <el-icon>
+                  <Crown />
+                </el-icon>
                 普通会员
               </el-tag>
             </p>
@@ -52,23 +48,14 @@
     <div class="nav-section">
       <div class="container">
         <div class="nav-grid">
-          <div 
-            v-for="item in navItems" 
-            :key="item.name"
-            class="nav-item"
-            @click="handleNavClick(item)"
-          >
+          <div v-for="item in navItems" :key="item.name" class="nav-item" @click="handleNavClick(item)">
             <div class="nav-icon">
               <el-icon :size="24">
                 <component :is="item.icon" />
               </el-icon>
             </div>
             <span class="nav-label">{{ item.label }}</span>
-            <el-badge 
-              v-if="item.badge" 
-              :value="item.badge" 
-              class="nav-badge"
-            />
+            <el-badge v-if="item.badge" :value="item.badge" class="nav-badge" />
           </div>
         </div>
       </div>
@@ -80,33 +67,41 @@
         <div class="content-grid">
           <!-- 左侧菜单 -->
           <div class="sidebar">
-            <el-menu
-              :default-active="activeMenu"
-              class="user-menu"
-              @select="handleMenuSelect"
-            >
+            <el-menu :default-active="activeMenu" class="user-menu" @select="handleMenuSelect">
               <el-menu-item index="profile">
-                <el-icon><User /></el-icon>
+                <el-icon>
+                  <User />
+                </el-icon>
                 <span>个人资料</span>
               </el-menu-item>
               <el-menu-item index="orders">
-                <el-icon><Document /></el-icon>
+                <el-icon>
+                  <Document />
+                </el-icon>
                 <span>我的订单</span>
               </el-menu-item>
               <el-menu-item index="favorites">
-                <el-icon><Star /></el-icon>
+                <el-icon>
+                  <Star />
+                </el-icon>
                 <span>我的收藏</span>
               </el-menu-item>
               <el-menu-item index="following">
-                <el-icon><UserFilled /></el-icon>
+                <el-icon>
+                  <UserFilled />
+                </el-icon>
                 <span>我的关注</span>
               </el-menu-item>
               <el-menu-item index="address">
-                <el-icon><Location /></el-icon>
+                <el-icon>
+                  <Location />
+                </el-icon>
                 <span>收货地址</span>
               </el-menu-item>
               <el-menu-item index="security">
-                <el-icon><Lock /></el-icon>
+                <el-icon>
+                  <Lock />
+                </el-icon>
                 <span>账户安全</span>
               </el-menu-item>
             </el-menu>
@@ -117,17 +112,17 @@
             <UserProfile v-if="activeMenu === 'profile'" />
             <UserOrders v-else-if="activeMenu === 'orders'" />
             <UserFavorites v-else-if="activeMenu === 'favorites'" />
-            
+
             <div v-else-if="activeMenu === 'addresses'" class="content-placeholder">
               <h3>收货地址</h3>
               <p>地址管理功能开发中...</p>
             </div>
-            
+
             <div v-else-if="activeMenu === 'security'" class="content-placeholder">
               <h3>账户安全</h3>
               <p>安全设置功能开发中...</p>
             </div>
-            
+
             <div v-else class="content-placeholder">
               <h3>功能开发中</h3>
               <p>该功能正在开发中，敬请期待...</p>
@@ -138,29 +133,18 @@
     </div>
 
     <!-- 头像上传对话框 -->
-    <el-dialog
-      v-model="showAvatarUpload"
-      title="更换头像"
-      width="400px"
-    >
-      <el-upload
-        class="avatar-uploader"
-        action="#"
-        :show-file-list="false"
-        :before-upload="beforeAvatarUpload"
-        :http-request="handleAvatarUpload"
-      >
+    <el-dialog v-model="showAvatarUpload" title="更换头像" width="400px">
+      <el-upload class="avatar-uploader" action="#" :show-file-list="false" :before-upload="beforeAvatarUpload"
+        :http-request="handleAvatarUpload">
         <img v-if="previewAvatar" :src="previewAvatar" class="avatar-preview" />
-        <el-icon v-else class="avatar-uploader-icon"><Plus /></el-icon>
+        <el-icon v-else class="avatar-uploader-icon">
+          <Plus />
+        </el-icon>
       </el-upload>
       <template #footer>
         <span class="dialog-footer">
           <el-button @click="showAvatarUpload = false">取消</el-button>
-          <el-button 
-            type="primary" 
-            :loading="uploadLoading"
-            @click="confirmAvatarUpload"
-          >
+          <el-button type="primary" :loading="uploadLoading" @click="confirmAvatarUpload">
             确定
           </el-button>
         </span>
@@ -173,14 +157,14 @@
 import { ref, reactive, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { 
-  User, Crown, Document, Star, UserFilled, 
-  Location, Lock, Plus, SwitchButton 
+import {
+  User, Crown, Document, Star, UserFilled,
+  Location, Lock, Plus, SwitchButton
 } from '@element-plus/icons-vue'
 import { useUserStore } from '@/store/modules/user'
 
 // 导入子组件
-import UserProfile from '@/components/user/UserProfile.vue'
+import UserProfile from '@/components/user/UserProfileComponent.vue'
 import UserOrders from '@/components/user/UserOrders.vue'
 import UserFavorites from '@/components/user/UserFavorites.vue'
 
@@ -321,7 +305,7 @@ const confirmAvatarUpload = async () => {
     // const formData = new FormData()
     // formData.append('avatar', file)
     // await userApi.uploadAvatar(formData)
-    
+
     // 模拟上传成功
     setTimeout(() => {
       ElMessage.success('头像更新成功')
@@ -341,7 +325,7 @@ const loadUserStats = async () => {
     // 这里应该调用API获取用户统计数据
     // const stats = await userApi.getUserStats()
     // Object.assign(userStats, stats)
-    
+
     // 模拟数据
     Object.assign(userStats, {
       orderCount: 12,
