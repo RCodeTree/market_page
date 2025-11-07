@@ -299,7 +299,8 @@ const loadProductDetail = async () => {
 // 加载推荐商品
 const loadRecommendProducts = async () => {
   try {
-    const response = await productApi.getRecommendProducts(productId.value)
+    // 使用后端推荐接口，排除当前商品ID
+    const response = await productApi.getRecommendedProducts({ excludeId: productId.value, limit: 8 })
     recommendProducts.value = response.data
   } catch (error) {
     console.error('加载推荐商品失败:', error)
