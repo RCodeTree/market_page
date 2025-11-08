@@ -15,20 +15,12 @@
         <div v-if="cartItems.length > 0" class="cart-content">
           <!-- 购物车头部操作 -->
           <div class="cart-header">
-            <el-checkbox
-              v-model="selectAll"
-              :indeterminate="isIndeterminate"
-              @change="handleSelectAll"
-            >
+            <el-checkbox v-model="selectAll" :indeterminate="isIndeterminate" @change="handleSelectAll">
               全选
             </el-checkbox>
-            
+
             <div class="header-actions">
-              <el-button 
-                type="danger" 
-                :disabled="selectedItems.length === 0"
-                @click="handleBatchDelete"
-              >
+              <el-button type="danger" :disabled="selectedItems.length === 0" @click="handleBatchDelete">
                 删除选中商品
               </el-button>
               <el-button @click="handleClearCart">
@@ -39,20 +31,13 @@
 
           <!-- 购物车列表 -->
           <div class="cart-list">
-            <div
-              v-for="item in cartItems"
-              :key="item.id"
-              class="cart-item"
-            >
-              <el-checkbox
-                v-model="item.selected"
-                @change="handleItemSelect"
-              />
-              
+            <div v-for="item in cartItems" :key="item.id" class="cart-item">
+              <el-checkbox v-model="item.selected" @change="handleItemSelect" />
+
               <div class="item-image">
-                <img :src="item.product.image" :alt="item.product.name" />
+                <img v-img-fallback :src="item.product.image" :alt="item.product.name" />
               </div>
-              
+
               <div class="item-info">
                 <h3 class="item-name" @click="goToProduct(item.product.id)">
                   {{ item.product.name }}
@@ -69,36 +54,24 @@
                   </span>
                 </div>
               </div>
-              
+
               <div class="item-quantity">
-                <el-input-number
-                  v-model="item.quantity"
-                  :min="1"
-                  :max="item.product.stock"
-                  @change="handleQuantityChange(item)"
-                />
+                <el-input-number v-model="item.quantity" :min="1" :max="item.product.stock"
+                  @change="handleQuantityChange(item)" />
                 <div class="stock-info">
                   库存{{ item.product.stock }}件
                 </div>
               </div>
-              
+
               <div class="item-total">
                 ¥{{ (item.product.price * item.quantity).toFixed(2) }}
               </div>
-              
+
               <div class="item-actions">
-                <el-button
-                  type="text"
-                  :icon="Star"
-                  @click="addToFavorites(item)"
-                >
+                <el-button type="text" :icon="Star" @click="addToFavorites(item)">
                   移入收藏
                 </el-button>
-                <el-button
-                  type="text"
-                  :icon="Delete"
-                  @click="removeItem(item)"
-                >
+                <el-button type="text" :icon="Delete" @click="removeItem(item)">
                   删除
                 </el-button>
               </div>
@@ -108,18 +81,14 @@
           <!-- 购物车底部结算 -->
           <div class="cart-footer">
             <div class="footer-left">
-              <el-checkbox
-                v-model="selectAll"
-                :indeterminate="isIndeterminate"
-                @change="handleSelectAll"
-              >
+              <el-checkbox v-model="selectAll" :indeterminate="isIndeterminate" @change="handleSelectAll">
                 全选
               </el-checkbox>
               <span class="selected-count">
                 已选择 {{ selectedItems.length }} 件商品
               </span>
             </div>
-            
+
             <div class="footer-right">
               <div class="total-info">
                 <div class="total-price">
@@ -129,13 +98,8 @@
                   已优惠: <span class="save">¥{{ saveAmount }}</span>
                 </div>
               </div>
-              
-              <el-button
-                type="primary"
-                size="large"
-                :disabled="selectedItems.length === 0"
-                @click="handleCheckout"
-              >
+
+              <el-button type="primary" size="large" :disabled="selectedItems.length === 0" @click="handleCheckout">
                 结算 ({{ selectedItems.length }})
               </el-button>
             </div>
@@ -152,31 +116,7 @@
         </div>
       </el-loading>
 
-      <!-- 推荐商品 -->
-      <div v-if="recommendProducts.length > 0" class="recommend-section">
-        <h3>为您推荐</h3>
-        <div class="recommend-list">
-          <div
-            v-for="product in recommendProducts"
-            :key="product.id"
-            class="recommend-item"
-            @click="goToProduct(product.id)"
-          >
-            <img :src="product.image" :alt="product.name" />
-            <div class="recommend-info">
-              <h4>{{ product.name }}</h4>
-              <span class="recommend-price">¥{{ product.price }}</span>
-            </div>
-            <el-button
-              type="primary"
-              size="small"
-              @click.stop="addToCartFromRecommend(product)"
-            >
-              加入购物车
-            </el-button>
-          </div>
-        </div>
-      </div>
+      
     </div>
   </div>
 </template>
@@ -188,14 +128,15 @@ import { ElMessage, ElMessageBox } from 'element-plus'
 import { Star, Delete } from '@element-plus/icons-vue'
 import { cartApi } from '@/api/cart'
 import { userApi } from '@/api/user'
-import { productApi } from '@/api/product'
+import { useCartStore } from '@/store/modules/cart'
 
 const router = useRouter()
+const cartStore = useCartStore()
 
 // 响应式数据
 const loading = ref(false)
 const cartItems = ref([])
-const recommendProducts = ref([])
+// 购物车页不展示推荐商品，保持页面纯净
 
 // 计算属性
 const selectedItems = computed(() => {
@@ -237,14 +178,35 @@ const saveAmount = computed(() => {
 const loadCartData = async () => {
   loading.value = true
   try {
-    const response = await cartApi.getCartList()
-    cartItems.value = response.data.map(item => ({
-      ...item,
-      selected: false
+    const response = await cartApi.getCartItems()
+    const list = Array.isArray(response.data) ? response.data : []
+    // 转换为页面期望的结构：包含 product 嵌套对象
+    cartItems.value = list.map(item => ({
+      id: item.id,
+      selected: false,
+      quantity: item.quantity,
+      specifications: {},
+      product: {
+        id: item.productId,
+        name: item.productName,
+        image: item.productImage,
+        price: item.price ?? item.productPrice,
+        originalPrice: item.productOriginalPrice || null,
+        stock: item.productStock ?? 0
+      }
     }))
-    
-    // 加载推荐商品
-    loadRecommendProducts()
+
+    // 同步到全局购物车（用于头部徽标数量显示）
+    // 将本地数据拍平成 store 结构
+    cartStore.cartItems = cartItems.value.map(ci => ({
+      id: ci.id,
+      productId: ci.product.id,
+      price: ci.product.price,
+      quantity: ci.quantity,
+      selected: false,
+      productName: ci.product.name,
+      productImage: ci.product.image
+    }))
   } catch (error) {
     console.error('加载购物车失败:', error)
     ElMessage.error('加载购物车失败')
@@ -253,15 +215,6 @@ const loadCartData = async () => {
   }
 }
 
-// 加载推荐商品
-const loadRecommendProducts = async () => {
-  try {
-    const response = await productApi.getRecommendProducts()
-    recommendProducts.value = response.data.slice(0, 6)
-  } catch (error) {
-    console.error('加载推荐商品失败:', error)
-  }
-}
 
 // 全选处理
 const handleSelectAll = (value) => {
@@ -278,10 +231,9 @@ const handleItemSelect = () => {
 // 数量变化处理
 const handleQuantityChange = async (item) => {
   try {
-    await cartApi.updateQuantity({
-      cartId: item.id,
-      quantity: item.quantity
-    })
+    await cartApi.updateQuantity(item.id, item.quantity)
+    // 同步头部数量
+    await cartStore.fetchCartItems()
   } catch (error) {
     console.error('更新数量失败:', error)
     ElMessage.error('更新数量失败')
@@ -302,9 +254,11 @@ const removeItem = async (item) => {
         type: 'warning'
       }
     )
-    
+
     await cartApi.removeFromCart(item.id)
     cartItems.value = cartItems.value.filter(cartItem => cartItem.id !== item.id)
+    // 同步头部数量
+    await cartStore.fetchCartItems()
     ElMessage.success('商品已删除')
   } catch (error) {
     if (error !== 'cancel') {
@@ -326,11 +280,13 @@ const handleBatchDelete = async () => {
         type: 'warning'
       }
     )
-    
+
     const cartIds = selectedItems.value.map(item => item.id)
     await cartApi.batchRemove(cartIds)
-    
+
     cartItems.value = cartItems.value.filter(item => !item.selected)
+    // 同步头部数量
+    await cartStore.fetchCartItems()
     ElMessage.success('选中商品已删除')
   } catch (error) {
     if (error !== 'cancel') {
@@ -352,9 +308,11 @@ const handleClearCart = async () => {
         type: 'warning'
       }
     )
-    
+
     await cartApi.clearCart()
     cartItems.value = []
+    // 同步头部数量
+    await cartStore.fetchCartItems()
     ElMessage.success('购物车已清空')
   } catch (error) {
     if (error !== 'cancel') {
@@ -381,7 +339,7 @@ const handleCheckout = () => {
     ElMessage.warning('请选择要结算的商品')
     return
   }
-  
+
   // 跳转到订单确认页面
   const orderData = {
     items: selectedItems.value.map(item => ({
@@ -392,7 +350,7 @@ const handleCheckout = () => {
       price: item.product.price
     }))
   }
-  
+
   // 将订单数据存储到 sessionStorage
   sessionStorage.setItem('checkoutData', JSON.stringify(orderData))
   router.push('/order/checkout')
@@ -403,20 +361,6 @@ const goToProduct = (productId) => {
   router.push(`/product/${productId}`)
 }
 
-// 从推荐商品添加到购物车
-const addToCartFromRecommend = async (product) => {
-  try {
-    await cartApi.addToCart({
-      productId: product.id,
-      quantity: 1
-    })
-    ElMessage.success('已添加到购物车')
-    loadCartData() // 重新加载购物车数据
-  } catch (error) {
-    console.error('添加到购物车失败:', error)
-    ElMessage.error('添加到购物车失败')
-  }
-}
 
 // 页面初始化
 onMounted(() => {
@@ -611,72 +555,14 @@ onMounted(() => {
   padding: var(--spacing-xxl) 0;
 }
 
-.recommend-section {
-  margin-top: var(--spacing-xl);
-  background-color: var(--bg-white);
-  border-radius: var(--radius-lg);
-  padding: var(--spacing-xl);
-  box-shadow: var(--shadow-sm);
-}
-
-.recommend-section h3 {
-  margin: 0 0 var(--spacing-lg) 0;
-  color: var(--text-primary);
-}
-
-.recommend-list {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: var(--spacing-lg);
-}
-
-.recommend-item {
-  border: 1px solid var(--border-color);
-  border-radius: var(--radius-md);
-  padding: var(--spacing-md);
-  cursor: pointer;
-  transition: all var(--transition-fast);
-}
-
-.recommend-item:hover {
-  box-shadow: var(--shadow-md);
-  transform: translateY(-2px);
-}
-
-.recommend-item img {
-  width: 100%;
-  height: 120px;
-  object-fit: cover;
-  border-radius: var(--radius-sm);
-  margin-bottom: var(--spacing-md);
-}
-
-.recommend-info h4 {
-  font-size: var(--font-size-base);
-  margin: 0 0 var(--spacing-sm) 0;
-  color: var(--text-primary);
-}
-
-.recommend-price {
-  color: var(--danger-color);
-  font-weight: var(--font-weight-bold);
-  margin-bottom: var(--spacing-md);
-  display: block;
-}
-
 /* PC端大屏幕优化 */
 @media (min-width: 1400px) {
   .container {
     max-width: 1400px;
   }
-  
+
   .cart-item {
     padding: var(--spacing-lg);
-    gap: var(--spacing-lg);
-  }
-  
-  .recommend-list {
-    grid-template-columns: repeat(5, 1fr);
     gap: var(--spacing-lg);
   }
 }
@@ -687,10 +573,7 @@ onMounted(() => {
     grid-template-columns: auto 100px 1fr auto auto auto;
     gap: var(--spacing-md);
   }
-  
-  .recommend-list {
-    grid-template-columns: repeat(3, 1fr);
-  }
+
 }
 
 /* 响应式设计 */
@@ -719,9 +602,6 @@ onMounted(() => {
     justify-content: center;
   }
 
-  .recommend-list {
-    grid-template-columns: repeat(2, 1fr);
-  }
 }
 
 @media (max-width: 480px) {
@@ -735,8 +615,5 @@ onMounted(() => {
     justify-content: center;
   }
 
-  .recommend-list {
-    grid-template-columns: 1fr;
-  }
 }
 </style>

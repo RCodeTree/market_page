@@ -20,7 +20,7 @@
       "@/*": ["./src/*"]
     },
     "types": [],
-    "typeRoots": [],
+    "typeRoots": ["./types", "./node_modules/@types"],
     "lib": ["ES2020", "DOM", "DOM.Iterable"]
   },
   "include": [
@@ -37,6 +37,9 @@
     "**/*.d.ts",
     "**/node_modules/**/*"
   ],
+  "typeAcquisition": {
+    "enable": false
+  },
   "vueCompilerOptions": {
     "target": 3
   }
