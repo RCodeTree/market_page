@@ -243,16 +243,18 @@ import { ElMessage, ElMessageBox } from 'element-plus'
 import { 
   Clock, 
   Money, 
-  Truck, 
+  Van, 
   Check, 
   Close,
   Warning
 } from '@element-plus/icons-vue'
 import { orderApi } from '@/api/order'
 import { cartApi } from '@/api/cart'
+import { useCartStore } from '@/store/modules/cart'
 
 const router = useRouter()
 const route = useRoute()
+const cartStore = useCartStore()
 
 // 响应式数据
 const loading = ref(false)
@@ -275,7 +277,7 @@ const statusConfig = {
   shipped: {
     text: '待收货',
     description: '商品正在配送中，请注意查收',
-    icon: Truck,
+    icon: Van,
     iconClass: 'primary'
   },
   delivered: {
@@ -398,9 +400,19 @@ const cancelOrder = async () => {
   }
 }
 
-// 支付订单
-const payOrder = () => {
-  router.push(`/order/pay/${order.value.id}`)
+// 支付订单（简化：直接成功并刷新订单状态）
+const payOrder = async () => {
+  try {
+    await orderApi.payOrder(order.value.id, { method: 'alipay' })
+    ElMessage.success('付款成功')
+    // 同步购物车徽标（创建订单时已清空对应条目，确保头部一致）
+    try { await cartStore.fetchCartItems() } catch {}
+    // 刷新订单详情
+    await loadOrderDetail()
+  } catch (error) {
+    console.error('付款失败:', error)
+    ElMessage.error('付款失败')
+  }
 }
 
 // 提醒发货
@@ -464,35 +476,37 @@ const applyAfterSale = () => {
 
 // 单个商品再次购买
 const buyAgain = async (item) => {
-  try {
-    await cartApi.addToCart({
-      productId: item.productId,
-      quantity: item.quantity,
-      specifications: item.specifications
-    })
-    ElMessage.success('商品已加入购物车')
-  } catch (error) {
-    console.error('再次购买失败:', error)
-    ElMessage.error('再次购买失败')
+  // 跳转到订单确认页，复用当前商品信息构造会话数据
+  const checkoutData = {
+    items: [
+      {
+        cartId: null,
+        productId: item.productId,
+        quantity: item.quantity,
+        specifications: item.specifications,
+        price: item.price,
+        product: item.product
+      }
+    ]
   }
+  sessionStorage.setItem('checkoutData', JSON.stringify(checkoutData))
+  router.push('/order/checkout')
 }
 
 // 所有商品再次购买
 const buyAgainAll = async () => {
-  try {
-    for (const item of order.value.items) {
-      await cartApi.addToCart({
-        productId: item.productId,
-        quantity: item.quantity,
-        specifications: item.specifications
-      })
-    }
-    ElMessage.success('所有商品已加入购物车')
-    router.push('/cart')
-  } catch (error) {
-    console.error('再次购买失败:', error)
-    ElMessage.error('再次购买失败')
+  const checkoutData = {
+    items: order.value.items.map(item => ({
+      cartId: null,
+      productId: item.productId,
+      quantity: item.quantity,
+      specifications: item.specifications,
+      price: item.price,
+      product: item.product
+    }))
   }
+  sessionStorage.setItem('checkoutData', JSON.stringify(checkoutData))
+  router.push('/order/checkout')
 }
 
 // 页面初始化

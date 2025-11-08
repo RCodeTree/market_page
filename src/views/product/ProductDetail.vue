@@ -147,8 +147,8 @@
                   <el-icon><Shield /></el-icon>
                   <span>正品保证</span>
                 </div>
-                <div class="guarantee-item">
-                  <el-icon><Truck /></el-icon>
+              <div class="guarantee-item">
+                  <el-icon><Van /></el-icon>
                   <span>快速配送</span>
                 </div>
                 <div class="guarantee-item">
@@ -240,7 +240,7 @@ import { ref, reactive, computed, onMounted, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import {
-  ShoppingCart, Star, ZoomIn, Shield, Truck, 
+  ShoppingCart, Star, ZoomIn, Shield, Van, 
   RefreshRight, Service
 } from '@element-plus/icons-vue'
 import { productApi } from '@/api/product'
@@ -333,18 +333,22 @@ const buyNow = async () => {
   
   buyingNow.value = true
   try {
-    // 创建订单
-    const orderData = {
+    // 跳转到订单确认页
+    const checkoutData = {
       items: [{
+        cartId: null,
         productId: product.value.id,
         quantity: quantity.value,
         specifications: selectedSpecs,
-        price: product.value.price
+        price: product.value.price,
+        product: {
+          name: product.value.name,
+          image: product.value.images?.[0] || product.value.mainImage || ''
+        }
       }]
     }
-    
-    const response = await orderApi.createOrder(orderData)
-    router.push(`/order/${response.data.id}`)
+    sessionStorage.setItem('checkoutData', JSON.stringify(checkoutData))
+    router.push('/order/checkout')
   } catch (error) {
     console.error('创建订单失败:', error)
     ElMessage.error('创建订单失败')

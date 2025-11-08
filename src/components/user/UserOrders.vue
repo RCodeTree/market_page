@@ -326,9 +326,16 @@ const cancelOrder = async (orderId) => {
   }
 }
 
-// 支付订单
-const payOrder = (orderId) => {
-  router.push(`/checkout?orderId=${orderId}`)
+// 支付订单（简化：直接成功并刷新列表）
+const payOrder = async (orderId) => {
+  try {
+    await orderApi.payOrder(orderId, { method: 'alipay' })
+    ElMessage.success('付款成功')
+    await loadOrders()
+  } catch (error) {
+    console.error('付款失败:', error)
+    ElMessage.error('付款失败')
+  }
 }
 
 // 确认收货

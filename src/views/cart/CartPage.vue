@@ -347,7 +347,13 @@ const handleCheckout = () => {
       productId: item.product.id,
       quantity: item.quantity,
       specifications: item.specifications,
-      price: item.product.price
+      price: item.product.price,
+      // 携带商品展示所需的最小信息，避免订单确认页无法显示图片与名称
+      product: {
+        id: item.product.id,
+        name: item.product.name,
+        image: item.product.image
+      }
     }))
   }
 

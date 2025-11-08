@@ -407,10 +407,18 @@ const cancelOrder = async (order) => {
   }
 }
 
-// 支付订单
-const payOrder = (order) => {
-  // 跳转到支付页面
-  router.push(`/order/pay/${order.id}`)
+// 支付订单（简化：直接成功并刷新列表）
+const payOrder = async (order) => {
+  try {
+    await orderApi.payOrder(order.id, { method: 'alipay' })
+    ElMessage.success('付款成功')
+    // 同步购物车徽标
+    try { await cartStore.fetchCartItems() } catch {}
+    await loadOrders()
+  } catch (error) {
+    console.error('付款失败:', error)
+    ElMessage.error('付款失败')
+  }
 }
 
 // 确认收货
@@ -453,22 +461,19 @@ const applyAfterSale = (order) => {
 }
 
 // 再次购买
-const buyAgain = async (order) => {
-  try {
-    // 将订单商品重新加入购物车
-    for (const item of order.items) {
-      await cartApi.addToCart({
-        productId: item.productId,
-        quantity: item.quantity,
-        specifications: item.specifications
-      })
-    }
-    ElMessage.success('商品已加入购物车')
-    router.push('/cart')
-  } catch (error) {
-    console.error('再次购买失败:', error)
-    ElMessage.error('再次购买失败')
+const buyAgain = (order) => {
+  const checkoutData = {
+    items: order.items.map(item => ({
+      cartId: null,
+      productId: item.productId,
+      quantity: item.quantity,
+      specifications: item.specifications,
+      price: item.price,
+      product: item.product
+    }))
   }
+  sessionStorage.setItem('checkoutData', JSON.stringify(checkoutData))
+  router.push('/order/checkout')
 }
 
 // 提醒发货

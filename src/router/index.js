@@ -49,6 +49,15 @@ const routes = [
     }
   },
   {
+    path: '/order/checkout',
+    name: 'OrderCheckout',
+    component: () => import('@/views/order/OrderCheckout.vue'),
+    meta: {
+      title: '订单确认',
+      requiresAuth: true
+    }
+  },
+  {
     path: '/order/:id',
     name: 'OrderDetail',
     component: () => import('@/views/order/OrderDetail.vue'),
