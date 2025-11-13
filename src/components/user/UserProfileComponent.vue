@@ -5,57 +5,33 @@
       <p class="section-subtitle">管理您的个人信息</p>
     </div>
 
-    <el-form
-      ref="profileFormRef"
-      :model="profileForm"
-      :rules="profileRules"
-      label-width="100px"
-      class="profile-form"
-    >
+    <el-form ref="profileFormRef" :model="profileForm" :rules="profileRules" label-width="100px" class="profile-form">
       <div class="form-section">
         <h4 class="form-section-title">基本信息</h4>
-        
+
         <el-form-item label="用户名" prop="username">
-          <el-input
-            v-model="profileForm.username"
-            placeholder="请输入用户名"
-            :disabled="true"
-          >
+          <el-input v-model="profileForm.username" placeholder="请输入用户名" :disabled="true">
             <template #suffix>
               <el-tooltip content="用户名不可修改" placement="top">
-                <el-icon><InfoFilled /></el-icon>
+                <el-icon>
+                  <InfoFilled />
+                </el-icon>
               </el-tooltip>
             </template>
           </el-input>
         </el-form-item>
 
         <el-form-item label="昵称" prop="nickname">
-          <el-input
-            v-model="profileForm.nickname"
-            placeholder="请输入昵称"
-            clearable
-          />
+          <el-input v-model="profileForm.nickname" placeholder="请输入昵称" clearable />
         </el-form-item>
 
         <el-form-item label="邮箱" prop="email">
-          <el-input
-            v-model="profileForm.email"
-            placeholder="请输入邮箱"
-            clearable
-          >
+          <el-input v-model="profileForm.email" placeholder="请输入邮箱" clearable>
             <template #suffix>
-              <el-tag 
-                v-if="profileForm.emailVerified" 
-                type="success" 
-                size="small"
-              >
+              <el-tag v-if="profileForm.emailVerified" type="success" size="small">
                 已验证
               </el-tag>
-              <el-tag 
-                v-else 
-                type="warning" 
-                size="small"
-              >
+              <el-tag v-else type="warning" size="small">
                 未验证
               </el-tag>
             </template>
@@ -63,24 +39,12 @@
         </el-form-item>
 
         <el-form-item label="手机号" prop="phone">
-          <el-input
-            v-model="profileForm.phone"
-            placeholder="请输入手机号"
-            clearable
-          >
+          <el-input v-model="profileForm.phone" placeholder="请输入手机号" clearable>
             <template #suffix>
-              <el-tag 
-                v-if="profileForm.phoneVerified" 
-                type="success" 
-                size="small"
-              >
+              <el-tag v-if="profileForm.phoneVerified" type="success" size="small">
                 已验证
               </el-tag>
-              <el-tag 
-                v-else 
-                type="warning" 
-                size="small"
-              >
+              <el-tag v-else type="warning" size="small">
                 未验证
               </el-tag>
             </template>
@@ -96,69 +60,37 @@
         </el-form-item>
 
         <el-form-item label="生日" prop="birthday">
-          <el-date-picker
-            v-model="profileForm.birthday"
-            type="date"
-            placeholder="请选择生日"
-            format="YYYY-MM-DD"
-            value-format="YYYY-MM-DD"
-            :disabled-date="disabledDate"
-          />
+          <el-date-picker v-model="profileForm.birthday" type="date" placeholder="请选择生日" format="YYYY-MM-DD"
+            value-format="YYYY-MM-DD" :disabled-date="disabledDate" />
         </el-form-item>
       </div>
 
       <div class="form-section">
         <h4 class="form-section-title">详细信息</h4>
-        
+
         <el-form-item label="所在地区" prop="location">
-          <el-cascader
-            v-model="profileForm.location"
-            :options="locationOptions"
-            placeholder="请选择所在地区"
-            clearable
-          />
+          <el-cascader v-model="profileForm.location" :options="locationOptions" placeholder="请选择所在地区" clearable />
         </el-form-item>
 
         <el-form-item label="个人简介" prop="bio">
-          <el-input
-            v-model="profileForm.bio"
-            type="textarea"
-            :rows="4"
-            placeholder="介绍一下自己吧..."
-            maxlength="200"
-            show-word-limit
-          />
+          <el-input v-model="profileForm.bio" type="textarea" :rows="4" placeholder="介绍一下自己吧..." maxlength="200"
+            show-word-limit />
         </el-form-item>
 
         <el-form-item label="兴趣标签" prop="interests">
           <div class="interests-section">
-            <el-tag
-              v-for="tag in profileForm.interests"
-              :key="tag"
-              closable
-              @close="removeInterest(tag)"
-              class="interest-tag"
-            >
+            <el-tag v-for="tag in profileForm.interests" :key="tag" closable @close="removeInterest(tag)"
+              class="interest-tag">
               {{ tag }}
             </el-tag>
-            
-            <el-input
-              v-if="inputVisible"
-              ref="inputRef"
-              v-model="inputValue"
-              size="small"
-              @keyup.enter="handleInputConfirm"
-              @blur="handleInputConfirm"
-              class="interest-input"
-            />
-            
-            <el-button
-              v-else
-              size="small"
-              @click="showInput"
-              class="add-interest-btn"
-            >
-              <el-icon><Plus /></el-icon>
+
+            <el-input v-if="inputVisible" ref="inputRef" v-model="inputValue" size="small"
+              @keyup.enter="handleInputConfirm" @blur="handleInputConfirm" class="interest-input" />
+
+            <el-button v-else size="small" @click="showInput" class="add-interest-btn">
+              <el-icon>
+                <Plus />
+              </el-icon>
               添加兴趣
             </el-button>
           </div>
@@ -167,11 +99,7 @@
 
       <div class="form-actions">
         <el-button @click="resetForm">重置</el-button>
-        <el-button 
-          type="primary" 
-          :loading="loading"
-          @click="handleSubmit"
-        >
+        <el-button type="primary" :loading="loading" @click="handleSubmit">
           保存修改
         </el-button>
       </div>
@@ -303,7 +231,7 @@ const handleSubmit = async () => {
     if (!valid) return
 
     loading.value = true
-    
+
     const success = await userStore.updateUserInfo(profileForm)
     if (success) {
       ElMessage.success('个人资料更新成功')

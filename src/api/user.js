@@ -27,12 +27,8 @@ export const userApi = {
   },
   
   // 上传头像
-  uploadAvatar(formData) {
-    return request.post('/user/avatar', formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data'
-      }
-    })
+  uploadAvatar(payload) {
+    return request.post('/user/avatar', payload)
   },
   
   // 获取用户订单列表
@@ -60,19 +56,23 @@ export const userApi = {
     return request.delete('/user/favorites/batch', { data: { favoriteIds } })
   },
   
-  // 获取用户关注列表
-  getFollowing(params = {}) {
-    return request.get('/user/following', { params })
+  // 获取用户统计
+  getUserStats() {
+    return request.get('/user/stats')
   },
-  
-  // 关注用户
-  followUser(userId) {
-    return request.post('/user/follow', { userId })
+
+  // 收货地址
+  getAddresses() {
+    return request.get('/user/addresses')
   },
-  
-  // 取消关注
-  unfollowUser(userId) {
-    return request.delete(`/user/follow/${userId}`)
+  addAddress(data) {
+    return request.post('/user/addresses', data)
+  },
+  updateAddress(id, data) {
+    return request.put(`/user/addresses/${id}`, data)
+  },
+  deleteAddress(id) {
+    return request.delete(`/user/addresses/${id}`)
   },
   
   // 获取搜索历史

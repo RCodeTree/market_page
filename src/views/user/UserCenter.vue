@@ -34,10 +34,7 @@
                 <span class="stat-number">{{ userStats.favoriteCount }}</span>
                 <span class="stat-label">收藏数</span>
               </div>
-              <div class="stat-item">
-                <span class="stat-number">{{ userStats.followingCount }}</span>
-                <span class="stat-label">关注数</span>
-              </div>
+
             </div>
           </div>
         </div>
@@ -86,12 +83,7 @@
                 </el-icon>
                 <span>我的收藏</span>
               </el-menu-item>
-              <el-menu-item index="following">
-                <el-icon>
-                  <UserFilled />
-                </el-icon>
-                <span>我的关注</span>
-              </el-menu-item>
+
               <el-menu-item index="address">
                 <el-icon>
                   <Location />
@@ -113,10 +105,7 @@
             <UserOrders v-else-if="activeMenu === 'orders'" />
             <UserFavorites v-else-if="activeMenu === 'favorites'" />
 
-            <div v-else-if="activeMenu === 'addresses'" class="content-placeholder">
-              <h3>收货地址</h3>
-              <p>地址管理功能开发中...</p>
-            </div>
+            <UserAddresses v-else-if="activeMenu === 'address'" />
 
             <div v-else-if="activeMenu === 'security'" class="content-placeholder">
               <h3>账户安全</h3>
@@ -158,15 +147,17 @@ import { ref, reactive, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import {
-  User, Medal, Document, Star, UserFilled,
+  User, Medal, Document, Star,
   Location, Lock, Plus, SwitchButton
 } from '@element-plus/icons-vue'
+import { userApi } from '@/api/user'
 import { useUserStore } from '@/store/modules/user'
 
 // 导入子组件
 import UserProfile from '@/components/user/UserProfileComponent.vue'
 import UserOrders from '@/components/user/UserOrders.vue'
 import UserFavorites from '@/components/user/UserFavorites.vue'
+import UserAddresses from '@/components/user/UserAddresses.vue'
 
 const router = useRouter()
 const userStore = useUserStore()
@@ -179,8 +170,7 @@ const uploadLoading = ref(false)
 // 用户统计数据
 const userStats = reactive({
   orderCount: 0,
-  favoriteCount: 0,
-  followingCount: 0
+  favoriteCount: 0
 })
 
 // 导航项目
@@ -188,35 +178,30 @@ const navItems = [
   {
     name: 'orders',
     label: '我的订单',
-    icon: 'Document',
+    icon: Document,
     badge: userStats.orderCount > 0 ? userStats.orderCount : null
   },
   {
     name: 'favorites',
     label: '我的收藏',
-    icon: 'Star',
+    icon: Star,
     badge: userStats.favoriteCount > 0 ? userStats.favoriteCount : null
   },
-  {
-    name: 'following',
-    label: '我的关注',
-    icon: 'UserFilled',
-    badge: userStats.followingCount > 0 ? userStats.followingCount : null
-  },
+
   {
     name: 'address',
     label: '收货地址',
-    icon: 'Location'
+    icon: Location
   },
   {
     name: 'security',
     label: '账户安全',
-    icon: 'Lock'
+    icon: Lock
   },
   {
     name: 'logout',
     label: '退出登录',
-    icon: 'SwitchButton'
+    icon: SwitchButton
   }
 ]
 
@@ -301,20 +286,19 @@ const confirmAvatarUpload = async () => {
 
   uploadLoading.value = true
   try {
-    // 这里应该调用上传API
-    // const formData = new FormData()
-    // formData.append('avatar', file)
-    // await userApi.uploadAvatar(formData)
-
-    // 模拟上传成功
-    setTimeout(() => {
-      ElMessage.success('头像更新成功')
-      showAvatarUpload.value = false
-      previewAvatar.value = ''
-      uploadLoading.value = false
-    }, 1000)
+    const res = await userApi.uploadAvatar({ dataUrl: previewAvatar.value })
+    const avatar = res?.data?.avatar
+    const user = res?.data?.user
+    if (user) {
+      userStore.userInfo = { ...userStore.userInfo, ...user }
+      localStorage.setItem('userInfo', JSON.stringify(userStore.userInfo))
+    }
+    if (avatar) ElMessage.success('头像更新成功')
+    showAvatarUpload.value = false
+    previewAvatar.value = ''
   } catch (error) {
     ElMessage.error('头像上传失败')
+  } finally {
     uploadLoading.value = false
   }
 }
@@ -322,16 +306,10 @@ const confirmAvatarUpload = async () => {
 // 加载用户统计数据
 const loadUserStats = async () => {
   try {
-    // 这里应该调用API获取用户统计数据
-    // const stats = await userApi.getUserStats()
-    // Object.assign(userStats, stats)
-
-    // 模拟数据
-    Object.assign(userStats, {
-      orderCount: 12,
-      favoriteCount: 8,
-      followingCount: 5
-    })
+    const res = await userApi.getUserStats()
+    if (res && res.data) {
+      Object.assign(userStats, res.data)
+    }
   } catch (error) {
     console.error('加载用户统计失败:', error)
   }
