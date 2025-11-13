@@ -39,7 +39,7 @@
         <el-dropdown @command="handleSortChange">
           <el-button :icon="Sort">
             {{ currentSort.label }}
-            <el-icon class="el-icon--right"><arrow-down /></el-icon>
+            <el-icon class="el-icon--right"><ArrowDown /></el-icon>
           </el-button>
           <template #dropdown>
             <el-dropdown-menu>

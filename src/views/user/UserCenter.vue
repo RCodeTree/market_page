@@ -20,7 +20,7 @@
             <p class="user-level">
               <el-tag type="warning" size="small">
                 <el-icon>
-                  <Crown />
+                  <Medal />
                 </el-icon>
                 普通会员
               </el-tag>
@@ -158,7 +158,7 @@ import { ref, reactive, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import {
-  User, Crown, Document, Star, UserFilled,
+  User, Medal, Document, Star, UserFilled,
   Location, Lock, Plus, SwitchButton
 } from '@element-plus/icons-vue'
 import { useUserStore } from '@/store/modules/user'

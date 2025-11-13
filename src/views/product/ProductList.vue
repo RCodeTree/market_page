@@ -272,10 +272,12 @@ const toggleFavorite = async (product) => {
     if (product.isFavorite) {
       await userApi.removeFavorite(product.favoriteId)
       product.isFavorite = false
+      product.favoriteId = undefined
       ElMessage.success('已取消收藏')
     } else {
-      await userApi.addFavorite(product.id)
+      const res = await userApi.addFavorite(product.id)
       product.isFavorite = true
+      product.favoriteId = res.data?.id || product.favoriteId
       ElMessage.success('已添加到收藏')
     }
   } catch (error) {
