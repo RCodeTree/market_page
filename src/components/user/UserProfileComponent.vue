@@ -77,24 +77,7 @@
             show-word-limit />
         </el-form-item>
 
-        <el-form-item label="兴趣标签" prop="interests">
-          <div class="interests-section">
-            <el-tag v-for="tag in profileForm.interests" :key="tag" closable @close="removeInterest(tag)"
-              class="interest-tag">
-              {{ tag }}
-            </el-tag>
 
-            <el-input v-if="inputVisible" ref="inputRef" v-model="inputValue" size="small"
-              @keyup.enter="handleInputConfirm" @blur="handleInputConfirm" class="interest-input" />
-
-            <el-button v-else size="small" @click="showInput" class="add-interest-btn">
-              <el-icon>
-                <Plus />
-              </el-icon>
-              添加兴趣
-            </el-button>
-          </div>
-        </el-form-item>
       </div>
 
       <div class="form-actions">
@@ -110,16 +93,14 @@
 <script setup>
 import { ref, reactive, onMounted, nextTick } from 'vue'
 import { ElMessage } from 'element-plus'
-import { InfoFilled, Plus } from '@element-plus/icons-vue'
+import { InfoFilled } from '@element-plus/icons-vue'
 import { useUserStore } from '@/store/modules/user'
+import { userApi } from '@/api/user'
 
 const userStore = useUserStore()
 
 const profileFormRef = ref()
-const inputRef = ref()
 const loading = ref(false)
-const inputVisible = ref(false)
-const inputValue = ref('')
 
 // 表单数据
 const profileForm = reactive({
@@ -131,7 +112,7 @@ const profileForm = reactive({
   birthday: '',
   location: [],
   bio: '',
-  interests: [],
+
   emailVerified: false,
   phoneVerified: false
 })
@@ -183,6 +164,25 @@ const locationOptions = [
       { value: 'haizhu', label: '海珠区' },
       { value: 'liwan', label: '荔湾区' }
     ]
+  },
+  {
+    value: 'guangxi',
+    label: '广西',
+    children: [
+      { value: 'nanning', label: '南宁' },
+      { value: 'liuzhou', label: '柳州' },
+      { value: 'guilin', label: '桂林' },
+      { value: 'wuzhou', label: '梧州' },
+      { value: 'beihai', label: '北海' },
+      { value: 'fangchenggang', label: '防城港' },
+      { value: 'qinzhou', label: '钦州' },
+      { value: 'guigang', label: '贵港' },
+      { value: 'yulin', label: '玉林' },
+      { value: 'baise', label: '百色' },
+      { value: 'hechi', label: '河池' },
+      { value: 'laibin', label: '来宾' },
+      { value: 'chongzuo', label: '崇左' }
+    ]
   }
 ]
 
@@ -191,32 +191,70 @@ const disabledDate = (time) => {
   return time.getTime() > Date.now()
 }
 
-// 移除兴趣标签
-const removeInterest = (tag) => {
-  const index = profileForm.interests.indexOf(tag)
-  if (index > -1) {
-    profileForm.interests.splice(index, 1)
-  }
-}
-
-// 显示输入框
-const showInput = () => {
-  inputVisible.value = true
-  nextTick(() => {
-    inputRef.value?.focus()
-  })
-}
-
-// 确认输入
-const handleInputConfirm = () => {
-  if (inputValue.value) {
-    if (!profileForm.interests.includes(inputValue.value)) {
-      profileForm.interests.push(inputValue.value)
+// 加载默认地址并填充所在地区
+const loadDefaultAddress = async () => {
+  if (!userStore.isLoggedIn) return
+  try {
+    const res = await userApi.getAddresses()
+    const list = res?.data || []
+    const def = list.find(a => a.is_default) || list[0]
+    if (def) {
+      profileForm.location = [
+        (def.province || '').toLowerCase(),
+        (def.city || '').toLowerCase()
+      ].filter(Boolean)
     }
+  } catch (e) {
+    // ignore
   }
-  inputVisible.value = false
-  inputValue.value = ''
 }
+
+// 同步所在地区到默认地址（若不存在则创建默认地址）
+const syncLocationToAddress = async () => {
+  if (!userStore.isLoggedIn) return
+  const loc = profileForm.location || []
+  if (!Array.isArray(loc) || loc.length < 1) return
+  const provinceMap = {
+    beijing: '北京', shanghai: '上海', guangzhou: '广州', guangxi: '广西'
+  }
+  const cityMap = {
+    haidian: '海淀区', chaoyang: '朝阳区', dongcheng: '东城区', xicheng: '西城区',
+    huangpu: '黄浦区', xuhui: '徐汇区', changning: '长宁区', jingan: '静安区',
+    tianhe: '天河区', yuexiu: '越秀区', haizhu: '海珠区', liwan: '荔湾区',
+    nanning: '南宁', liuzhou: '柳州', guilin: '桂林', wuzhou: '梧州', beihai: '北海',
+    fangchenggang: '防城港', qinzhou: '钦州', guigang: '贵港', yulin: '玉林',
+    baise: '百色', hechi: '河池', laibin: '来宾', chongzuo: '崇左'
+  }
+  const provinceKey = loc[0]
+  const cityKey = loc[1]
+  const province = provinceMap[provinceKey] || provinceKey
+  const city = cityMap[cityKey] || cityKey || province
+  const district = city
+
+  const res = await userApi.getAddresses()
+  const list = res?.data || []
+  const def = list.find(a => a.is_default) || null
+  if (def) {
+    await userApi.updateAddress(def.id, { province, city, district })
+  } else {
+    const user = userStore.userInfo || {}
+    const receiver_name = user.nickname || user.username || '收货人'
+    const receiver_phone = user.phone || '13800000000'
+    await userApi.addAddress({
+      receiver_name,
+      receiver_phone,
+      province,
+      city,
+      district,
+      detail_address: '默认地址（请完善详细地址）',
+      postal_code: '',
+      address_tag: 'home',
+      is_default: true
+    })
+  }
+}
+
+// 兴趣标签已移除
 
 // 重置表单
 const resetForm = () => {
@@ -226,18 +264,22 @@ const resetForm = () => {
 
 // 提交表单
 const handleSubmit = async () => {
+  const valid = await profileFormRef.value.validate().then(() => true).catch(() => false)
+  if (!valid) {
+    ElMessage.error('请检查表单填写')
+    return
+  }
+
+  loading.value = true
   try {
-    const valid = await profileFormRef.value.validate()
-    if (!valid) return
-
-    loading.value = true
-
     const success = await userStore.updateUserInfo(profileForm)
     if (success) {
+      await syncLocationToAddress()
+      await loadDefaultAddress()
       ElMessage.success('个人资料更新成功')
+    } else {
+      ElMessage.error('更新失败')
     }
-  } catch (error) {
-    console.error('更新个人资料失败:', error)
   } finally {
     loading.value = false
   }
@@ -258,7 +300,7 @@ const loadUserProfile = async () => {
         birthday: userInfo.birthday || '',
         location: userInfo.location || [],
         bio: userInfo.bio || '',
-        interests: userInfo.interests || [],
+
         emailVerified: userInfo.emailVerified || false,
         phoneVerified: userInfo.phoneVerified || false
       })
@@ -271,6 +313,7 @@ const loadUserProfile = async () => {
 
 onMounted(() => {
   loadUserProfile()
+  loadDefaultAddress()
 })
 </script>
 

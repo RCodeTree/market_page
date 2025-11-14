@@ -5,14 +5,11 @@
       <div class="container">
         <div class="user-info">
           <div class="avatar-section">
-            <el-avatar :size="80" :src="userStore.userAvatar" class="user-avatar">
+            <el-avatar :size="80" :src="userStore.userAvatar" class="user-avatar" @click="showAvatarUpload = true">
               <el-icon>
                 <User />
               </el-icon>
             </el-avatar>
-            <el-button type="text" class="change-avatar-btn" @click="showAvatarUpload = true">
-              更换头像
-            </el-button>
           </div>
 
           <div class="user-details">
@@ -473,7 +470,10 @@ onMounted(() => {
 
 /* 头像上传样式 */
 .avatar-uploader {
-  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px;
 }
 
 .avatar-uploader :deep(.el-upload) {
@@ -488,6 +488,7 @@ onMounted(() => {
   display: flex;
   align-items: center;
   justify-content: center;
+  margin: 0 auto;
 }
 
 .avatar-uploader :deep(.el-upload:hover) {
