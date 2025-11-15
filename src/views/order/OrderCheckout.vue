@@ -16,26 +16,48 @@
           <div class="section">
             <h2>收货信息</h2>
             <div class="receiver-form">
-              <el-form :model="receiver" label-width="100px">
-                <el-form-item label="收货人">
-                  <el-input v-model="receiver.recipientName" maxlength="50" />
+              <el-form label-width="100px">
+                <el-form-item label="地址来源">
+                  <el-radio-group v-model="addressMode">
+                    <el-radio label="existing">选择已有地址</el-radio>
+                    <el-radio label="new">自定义新地址</el-radio>
+                  </el-radio-group>
                 </el-form-item>
-                <el-form-item label="手机">
-                  <el-input v-model="receiver.phone" maxlength="20" />
-                </el-form-item>
-                <el-form-item label="省市区">
-                  <div class="address-row">
-                    <el-input v-model="receiver.province" placeholder="省" />
-                    <el-input v-model="receiver.city" placeholder="市" />
-                    <el-input v-model="receiver.district" placeholder="区/县" />
-                  </div>
-                </el-form-item>
-                <el-form-item label="详细地址">
-                  <el-input v-model="receiver.detailAddress" type="textarea" rows="2" />
-                </el-form-item>
-                <el-form-item label="买家留言">
-                  <el-input v-model="buyerMessage" type="textarea" rows="2" maxlength="200" show-word-limit />
-                </el-form-item>
+
+                <template v-if="addressMode === 'existing'">
+                  <el-form-item label="选择地址">
+                    <el-select v-model="selectedAddressId" placeholder="请选择收货地址" style="width: 100%"
+                      @change="applySelectedAddress">
+                      <el-option v-for="addr in addressList" :key="addr.id" :label="formatAddressOption(addr)"
+                        :value="addr.id" />
+                    </el-select>
+                  </el-form-item>
+                  <el-form-item label="买家留言">
+                    <el-input v-model="buyerMessage" type="textarea" rows="2" maxlength="200" show-word-limit />
+                  </el-form-item>
+                </template>
+
+                <template v-else>
+                  <el-form-item label="收货人">
+                    <el-input v-model="receiver.recipientName" maxlength="50" />
+                  </el-form-item>
+                  <el-form-item label="手机">
+                    <el-input v-model="receiver.phone" maxlength="20" />
+                  </el-form-item>
+                  <el-form-item label="省市区">
+                    <div class="address-row">
+                      <el-input v-model="receiver.province" placeholder="省" />
+                      <el-input v-model="receiver.city" placeholder="市" />
+                      <el-input v-model="receiver.district" placeholder="区/县" />
+                    </div>
+                  </el-form-item>
+                  <el-form-item label="详细地址">
+                    <el-input v-model="receiver.detailAddress" type="textarea" rows="2" />
+                  </el-form-item>
+                  <el-form-item label="买家留言">
+                    <el-input v-model="buyerMessage" type="textarea" rows="2" maxlength="200" show-word-limit />
+                  </el-form-item>
+                </template>
               </el-form>
             </div>
           </div>
@@ -115,6 +137,7 @@ import { useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
 import { orderApi } from '@/api/order'
 import { productApi } from '@/api/product'
+import { userApi } from '@/api/user'
 import { useCartStore } from '@/store/modules/cart'
 import { useUserStore } from '@/store/modules/user'
 
@@ -123,6 +146,9 @@ const cartStore = useCartStore()
 const userStore = useUserStore?.() || { isLoggedIn: true, userName: '用户' }
 const loading = ref(false)
 const items = ref([])
+const addressMode = ref('existing')
+const addressList = ref([])
+const selectedAddressId = ref(null)
 const receiver = ref({
   recipientName: '',
   phone: '',
@@ -162,23 +188,57 @@ const submitOrder = async () => {
     ElMessage.warning('没有待结算的商品')
     return
   }
-  // 基础校验
-  const required = ['recipientName', 'phone', 'province', 'city', 'district', 'detailAddress']
-  for (const f of required) {
-    const val = String(receiver.value[f] || '').trim()
-    if (!val) {
-      ElMessage.warning('请完整填写收货信息')
+  if (addressMode.value === 'existing') {
+    if (!selectedAddressId.value) {
+      ElMessage.warning('请选择收货地址')
+      return
+    }
+    const sel = addressList.value.find(a => a.id === selectedAddressId.value)
+    if (!sel) {
+      ElMessage.warning('请选择有效的收货地址')
+      return
+    }
+    receiver.value = {
+      recipientName: sel.receiver_name || '',
+      phone: sel.receiver_phone || '',
+      province: sel.province || '',
+      city: sel.city || '',
+      district: sel.district || '',
+      detailAddress: sel.detail_address || ''
+    }
+  } else {
+    const required = ['recipientName', 'phone', 'province', 'city', 'district', 'detailAddress']
+    for (const f of required) {
+      const val = String(receiver.value[f] || '').trim()
+      if (!val) {
+        ElMessage.warning('请完整填写收货信息')
+        return
+      }
+    }
+    const phoneStr = String(receiver.value.phone || '').trim()
+    const phonePattern = /^1[3-9]\d{9}$/
+    if (!phonePattern.test(phoneStr)) {
+      ElMessage.warning('手机号格式不正确')
       return
     }
   }
-  const phoneStr = String(receiver.value.phone || '').trim()
-  const phonePattern = /^1[3-9]\d{9}$/
-  if (!phonePattern.test(phoneStr)) {
-    ElMessage.warning('手机号格式不正确')
-    return
-  }
   loading.value = true
   try {
+    if (addressMode.value === 'new') {
+      try {
+        await userApi.addAddress({
+          receiver_name: receiver.value.recipientName,
+          receiver_phone: receiver.value.phone,
+          province: receiver.value.province,
+          city: receiver.value.city,
+          district: receiver.value.district,
+          detail_address: receiver.value.detailAddress,
+          postal_code: '',
+          address_tag: 'home',
+          is_default: false
+        })
+      } catch { }
+    }
     const payload = {
       items: items.value.map(it => ({
         productId: it.productId,
@@ -199,7 +259,7 @@ const submitOrder = async () => {
     const { id } = res.data
     ElMessage.success('订单创建成功')
     // 同步头部购物车数量
-    try { await cartStore.fetchCartItems() } catch {}
+    try { await cartStore.fetchCartItems() } catch { }
     // 清理会话数据
     sessionStorage.removeItem('checkoutData')
     router.push(`/order/${id}`)
@@ -234,6 +294,7 @@ onMounted(() => {
   } catch (e) {
     console.warn('解析结算数据失败:', e)
   }
+  loadAddresses()
 })
 
 // 若存在缺失的商品信息，则从后端加载商品详情补齐图片与名称
@@ -258,6 +319,41 @@ const ensureProductInfo = async () => {
     console.warn('补全商品信息失败:', e)
   }
 }
+
+const loadAddresses = async () => {
+  try {
+    const res = await userApi.getAddresses()
+    addressList.value = res?.data || []
+    if (addressList.value.length > 0) {
+      addressMode.value = 'existing'
+      selectedAddressId.value = addressList.value.find(a => a.is_default)?.id || addressList.value[0].id
+      applySelectedAddress()
+    } else {
+      addressMode.value = 'new'
+    }
+  } catch {
+    addressMode.value = 'new'
+  }
+}
+
+const applySelectedAddress = () => {
+  const sel = addressList.value.find(a => a.id === selectedAddressId.value)
+  if (!sel) return
+  receiver.value = {
+    recipientName: sel.receiver_name || '',
+    phone: sel.receiver_phone || '',
+    province: sel.province || '',
+    city: sel.city || '',
+    district: sel.district || '',
+    detailAddress: sel.detail_address || ''
+  }
+}
+
+const formatAddressOption = (addr) => {
+  const head = `${addr.receiver_name || ''} ${addr.receiver_phone || ''}`.trim()
+  const body = `${addr.province || ''}${addr.city || ''}${addr.district || ''} ${addr.detail_address || ''}`.trim()
+  return head ? `${head} | ${body}` : body
+}
 </script>
 
 <style scoped>
@@ -266,30 +362,36 @@ const ensureProductInfo = async () => {
   background-color: var(--bg-secondary);
   padding: var(--spacing-lg) 0;
 }
+
 .page-header {
   margin-bottom: var(--spacing-xl);
 }
+
 .checkout-content {
   display: flex;
   flex-direction: column;
   gap: var(--spacing-lg);
 }
+
 .section {
   background-color: var(--bg-white);
   border-radius: var(--radius-lg);
   padding: var(--spacing-xl);
   box-shadow: var(--shadow-sm);
 }
+
 .receiver-form .address-row {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   gap: var(--spacing-sm);
 }
+
 .items-list {
   display: flex;
   flex-direction: column;
   gap: var(--spacing-md);
 }
+
 .checkout-item {
   display: grid;
   grid-template-columns: 100px 1fr 120px 80px 120px;
@@ -298,26 +400,59 @@ const ensureProductInfo = async () => {
   padding: var(--spacing-md) 0;
   border-bottom: 1px solid var(--border-light);
 }
+
 .item-image {
   width: 100px;
   height: 100px;
   border-radius: var(--radius-md);
   overflow: hidden;
 }
+
 .item-image img {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
+
 .item-name {
   margin: 0 0 var(--spacing-xs) 0;
   color: var(--text-primary);
 }
-.item-specs span { margin-right: var(--spacing-sm); }
-.item-price, .item-total { color: var(--text-primary); font-weight: var(--font-weight-medium); }
-.summary { display: flex; flex-direction: column; gap: var(--spacing-sm); align-items: flex-end; }
-.summary .row { display: flex; gap: var(--spacing-md); }
-.summary .row.total .value { color: var(--danger-color); font-size: var(--font-size-xl); }
-.summary .discount { color: var(--success-color); }
-.actions { display: flex; justify-content: flex-end; gap: var(--spacing-md); }
+
+.item-specs span {
+  margin-right: var(--spacing-sm);
+}
+
+.item-price,
+.item-total {
+  color: var(--text-primary);
+  font-weight: var(--font-weight-medium);
+}
+
+.summary {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+  align-items: flex-end;
+}
+
+.summary .row {
+  display: flex;
+  gap: var(--spacing-md);
+}
+
+.summary .row.total .value {
+  color: var(--danger-color);
+  font-size: var(--font-size-xl);
+}
+
+.summary .discount {
+  color: var(--success-color);
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--spacing-md);
+}
 </style>

@@ -185,7 +185,8 @@ onMounted(() => {
 
 <style scoped>
 .user-profile {
-  max-width: 800px;
+  width: 100%;
+  max-width: none;
 }
 
 .profile-header {
@@ -208,6 +209,7 @@ onMounted(() => {
   background: var(--bg-secondary);
   padding: var(--spacing-xl);
   border-radius: var(--radius-lg);
+  width: 100%;
 }
 
 .form-section {

@@ -59,44 +59,6 @@
     <div class="main-content">
       <div class="container">
         <div class="content-grid">
-          <!-- 左侧菜单 -->
-          <div class="sidebar">
-            <el-menu :default-active="activeMenu" class="user-menu" @select="handleMenuSelect">
-              <el-menu-item index="profile">
-                <el-icon>
-                  <User />
-                </el-icon>
-                <span>个人资料</span>
-              </el-menu-item>
-              <el-menu-item index="orders">
-                <el-icon>
-                  <Document />
-                </el-icon>
-                <span>我的订单</span>
-              </el-menu-item>
-              <el-menu-item index="favorites">
-                <el-icon>
-                  <Star />
-                </el-icon>
-                <span>我的收藏</span>
-              </el-menu-item>
-
-              <el-menu-item index="address">
-                <el-icon>
-                  <Location />
-                </el-icon>
-                <span>收货地址</span>
-              </el-menu-item>
-              <el-menu-item index="security">
-                <el-icon>
-                  <Lock />
-                </el-icon>
-                <span>账户安全</span>
-              </el-menu-item>
-            </el-menu>
-          </div>
-
-          <!-- 右侧内容 -->
           <div class="content-area">
             <UserProfile v-if="activeMenu === 'profile'" />
             <UserOrders v-else-if="activeMenu === 'orders'" />
@@ -159,7 +121,7 @@ import UserAddresses from '@/components/user/UserAddresses.vue'
 const router = useRouter()
 const userStore = useUserStore()
 
-const activeMenu = ref('profile')
+const activeMenu = ref('orders')
 const showAvatarUpload = ref(false)
 const previewAvatar = ref('')
 const uploadLoading = ref(false)
@@ -172,6 +134,11 @@ const userStats = reactive({
 
 // 导航项目
 const navItems = [
+  {
+    name: 'profile',
+    label: '个人资料',
+    icon: User
+  },
   {
     name: 'orders',
     label: '我的订单',
@@ -221,10 +188,6 @@ const handleNavClick = (item) => {
   }
 }
 
-// 处理菜单选择
-const handleMenuSelect = (index) => {
-  activeMenu.value = index
-}
 
 // 处理退出登录
 const handleLogout = () => {
@@ -439,26 +402,10 @@ onMounted(() => {
 
 .content-grid {
   display: grid;
-  grid-template-columns: 250px 1fr;
+  grid-template-columns: 1fr;
   gap: var(--spacing-xl);
 }
 
-.sidebar {
-  background: white;
-  border-radius: var(--radius-lg);
-  padding: var(--spacing-lg);
-  height: fit-content;
-  box-shadow: var(--shadow-sm);
-}
-
-.user-menu {
-  border: none;
-}
-
-.user-menu .el-menu-item {
-  border-radius: var(--radius-md);
-  margin-bottom: var(--spacing-xs);
-}
 
 .content-area {
   background: white;
