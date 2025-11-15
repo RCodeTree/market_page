@@ -8,20 +8,11 @@
     <!-- 订单状态筛选 -->
     <div class="order-tabs">
       <el-tabs v-model="activeTab" @tab-change="handleTabChange">
-        <el-tab-pane 
-          v-for="tab in orderTabs" 
-          :key="tab.name"
-          :label="tab.label" 
-          :name="tab.name"
-        >
+        <el-tab-pane v-for="tab in orderTabs" :key="tab.name" :label="tab.label" :name="tab.name">
           <template #label>
             <span class="tab-label">
               {{ tab.label }}
-              <el-badge 
-                v-if="tab.count > 0" 
-                :value="tab.count" 
-                class="tab-badge"
-              />
+              <el-badge v-if="tab.count > 0" :value="tab.count" class="tab-badge" />
             </span>
           </template>
         </el-tab-pane>
@@ -32,10 +23,7 @@
     <div class="orders-content">
       <el-loading v-loading="loading" class="loading-container">
         <div v-if="orders.length === 0" class="empty-state">
-          <el-empty 
-            :image-size="120"
-            description="暂无订单"
-          >
+          <el-empty :image-size="120" description="暂无订单">
             <el-button type="primary" @click="$router.push('/')">
               去购物
             </el-button>
@@ -43,11 +31,7 @@
         </div>
 
         <div v-else class="orders-list">
-          <div 
-            v-for="order in orders" 
-            :key="order.id"
-            class="order-card"
-          >
+          <div v-for="order in orders" :key="order.id" class="order-card">
             <!-- 订单头部 -->
             <div class="order-header">
               <div class="order-info">
@@ -55,10 +39,7 @@
                 <span class="order-date">{{ formatDate(order.createdAt) }}</span>
               </div>
               <div class="order-status">
-                <el-tag 
-                  :type="getStatusType(order.status)"
-                  size="large"
-                >
+                <el-tag :type="getStatusType(order.status)" size="large">
                   {{ getStatusText(order.status) }}
                 </el-tag>
               </div>
@@ -66,23 +47,13 @@
 
             <!-- 订单商品 -->
             <div class="order-items">
-              <div 
-                v-for="item in order.items" 
-                :key="item.id"
-                class="order-item"
-                @click="goToProduct(item.productId)"
-              >
+              <div v-for="item in order.items" :key="item.id" class="order-item" @click="goToProduct(item.productId)">
                 <div class="item-image">
-                  <el-image 
-                    :src="item.image" 
-                    :alt="item.name"
-                    fit="cover"
-                    lazy
-                  />
+                  <el-image :src="item.image" :alt="item.name" fit="cover" lazy />
                 </div>
                 <div class="item-details">
                   <h4 class="item-name">{{ item.name }}</h4>
-                  <p class="item-specs">{{ item.specs }}</p>
+                  <p v-if="formatSpecs(item)" class="item-specs">{{ formatSpecs(item) }}</p>
                   <div class="item-price-qty">
                     <span class="item-price">¥{{ item.price }}</span>
                     <span class="item-quantity">×{{ item.quantity }}</span>
@@ -103,53 +74,29 @@
 
             <!-- 订单操作 -->
             <div class="order-actions">
-              <el-button 
-                size="small" 
-                @click="viewOrderDetail(order.id)"
-              >
+              <el-button size="small" @click="viewOrderDetail(order.id)">
                 查看详情
               </el-button>
-              
-              <el-button 
-                v-if="order.status === 'pending'"
-                size="small" 
-                type="danger"
-                @click="cancelOrder(order.id)"
-              >
+
+              <el-button v-if="order.status === 'pending'" size="small" type="danger" @click="cancelOrder(order.id)">
                 取消订单
               </el-button>
-              
-              <el-button 
-                v-if="order.status === 'pending'"
-                size="small" 
-                type="primary"
-                @click="payOrder(order.id)"
-              >
+
+              <el-button v-if="order.status === 'pending'" size="small" type="primary" @click="payOrder(order.id)">
                 立即付款
               </el-button>
-              
-              <el-button 
-                v-if="order.status === 'shipped'"
-                size="small" 
-                type="primary"
-                @click="confirmReceived(order.id)"
-              >
+
+              <el-button v-if="order.status === 'shipped'" size="small" type="primary"
+                @click="confirmReceived(order.id)">
                 确认收货
               </el-button>
-              
-              <el-button 
-                v-if="order.status === 'completed'"
-                size="small"
-                @click="reviewOrder(order.id)"
-              >
+
+              <el-button v-if="order.status === 'completed'" size="small" @click="reviewOrder(order.id)">
                 评价
               </el-button>
-              
-              <el-button 
-                v-if="['completed', 'cancelled'].includes(order.status)"
-                size="small"
-                @click="deleteOrder(order.id)"
-              >
+
+              <el-button v-if="['completed', 'cancelled'].includes(order.status)" size="small"
+                @click="deleteOrder(order.id)">
                 删除订单
               </el-button>
             </div>
@@ -159,15 +106,9 @@
 
       <!-- 分页 -->
       <div v-if="total > 0" class="pagination">
-        <el-pagination
-          v-model:current-page="currentPage"
-          v-model:page-size="pageSize"
-          :total="total"
-          :page-sizes="[10, 20, 50]"
-          layout="total, sizes, prev, pager, next, jumper"
-          @size-change="handleSizeChange"
-          @current-change="handleCurrentChange"
-        />
+        <el-pagination v-model:current-page="currentPage" v-model:page-size="pageSize" :total="total"
+          :page-sizes="[10, 20, 50]" layout="total, sizes, prev, pager, next, jumper" @size-change="handleSizeChange"
+          @current-change="handleCurrentChange" />
       </div>
     </div>
   </div>
@@ -263,11 +204,11 @@ const loadOrders = async () => {
       pageSize: pageSize.value,
       status: activeTab.value === 'all' ? undefined : activeTab.value
     }
-    
+
     const response = await orderApi.getUserOrders(params)
     orders.value = response.data.orders
     total.value = response.data.total
-    
+
     // 更新标签计数
     updateTabCounts(response.data.statusCounts)
   } catch (error) {
@@ -311,7 +252,7 @@ const cancelOrder = async (orderId) => {
         type: 'warning'
       }
     )
-    
+
     loading.value = true
     await orderApi.cancelOrder(orderId)
     ElMessage.success('订单已取消')
@@ -350,7 +291,7 @@ const confirmReceived = async (orderId) => {
         type: 'info'
       }
     )
-    
+
     loading.value = true
     await orderApi.confirmReceived(orderId)
     ElMessage.success('确认收货成功')
@@ -382,7 +323,7 @@ const deleteOrder = async (orderId) => {
         type: 'warning'
       }
     )
-    
+
     loading.value = true
     await orderApi.deleteOrder(orderId)
     ElMessage.success('订单已删除')
@@ -395,6 +336,28 @@ const deleteOrder = async (orderId) => {
   } finally {
     loading.value = false
   }
+}
+
+const formatSpecs = (item) => {
+  const obj = item?.specifications
+  if (obj && typeof obj === 'object' && Object.keys(obj).length > 0) {
+    return Object.entries(obj).map(([k, v]) => `${k}:${v}`).join(', ')
+  }
+  const s = item?.specs
+  if (typeof s === 'string') {
+    const t = s.trim()
+    if (!t) return ''
+    try {
+      if (t.startsWith('{') || t.startsWith('[')) {
+        const parsed = JSON.parse(t)
+        if (parsed && typeof parsed === 'object') {
+          return Object.entries(parsed).map(([k, v]) => `${k}:${v}`).join(', ')
+        }
+      }
+    } catch (_) { }
+    return t
+  }
+  return ''
 }
 
 onMounted(() => {
