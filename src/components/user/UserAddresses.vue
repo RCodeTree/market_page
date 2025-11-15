@@ -166,7 +166,7 @@ const deleteAddress = async (row) => {
     ElMessage.success('删除成功')
     await fetchList()
   } catch (e) {
-    // 用户取消或错误
+    // 错误提示已由拦截器统一处理
   }
 }
 
